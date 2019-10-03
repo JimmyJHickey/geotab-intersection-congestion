@@ -4,3 +4,6 @@
 .Ruserdata
 bigquery-geotab-intersection-congestion-data/
 geotab-intersection-congestion.Rproj
+
+.DS_Store
+*data/
