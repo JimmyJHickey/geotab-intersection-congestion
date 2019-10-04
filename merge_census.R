@@ -82,8 +82,6 @@ train_Chicago <- train[train$City == "Chicago",]
 
 IL_boundary_file <- "tl_2019_17_bg/tl_2019_17_bg.shp"
 
-
-
 # append the geoid to train_Chicago
 
 tic()
@@ -92,6 +90,65 @@ train_Chicago <- my_append_geoid(train_Chicago, IL_boundary_file)
 
 toc()
 
+
+
+#### Atlanta ####
+
+# Extract Atlanta intersections
+
+train_Atlanta <- train[train$City == "Atlanta",] 
+
+# Read in Block Group shapefile
+
+GA_boundary_file <- "tl_2019_13_bg/tl_2019_13_bg.shp"
+
+# append the geoid to train_Atlanta
+
+tic()
+
+train_Atlanta <- my_append_geoid(train_Atlanta, GA_boundary_file)
+
+toc()
+
+
+
+#### Boston ####
+
+# Extract Boston intersections
+
+train_Boston <- train[train$City == "Boston",] 
+
+# Read in Block Group shapefile
+
+MA_boundary_file <- "tl_2019_25_bg/tl_2019_25_bg.shp"
+
+# append the geoid to train_Boston
+
+tic()
+
+train_Boston <- my_append_geoid(train_Boston, MA_boundary_file)
+
+toc()
+
+
+
+#### Philadelphia ####
+
+# Extract Philadelphia intersections
+
+train_Philadelphia <- train[train$City == "Philadelphia",] 
+
+# Read in Block Group shapefile
+
+PA_boundary_file <- "tl_2019_42_bg/tl_2019_42_bg.shp"
+
+# append the geoid to train_Philadelphia
+
+tic()
+
+train_Philadelphia <- my_append_geoid(train_Philadelphia, PA_boundary_file)
+
+toc()
 
 
 
@@ -111,7 +168,7 @@ names(chicago_popl)[names(chicago_popl) == "Id2"] <- "geoid"
 
 train_Chicago <- merge(train_Chicago, chicago_popl[c("geoid", "Estimate..Total")], by = "geoid", all.x = TRUE)
 
-# save(train_Chicago, file = "backup_data_files/train_Chicago.RData")
+save(train_Chicago, file = "backup_data_files/train_Chicago.RData")
 
 
 
