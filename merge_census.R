@@ -12,6 +12,8 @@ test <- read.csv("/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-cong
 
 
 
+#### Chicago ####
+
 # Extract Chicago intersections
 
 train_Chicago <- train[train$City == "Chicago",]
@@ -40,7 +42,7 @@ blocks <- lapply(
     pre_coords <- x@Polygons[[1]]@coords
     coords <- data.frame(latitude = pre_coords[,2], longitude = pre_coords[,1])
     pre_id <- x@ID
-    id <- as.integer((gsub("ID", "", pre_id)))
+    id <- as.integer((gsub("ID", "", pre_id))) # this is simply to get the order of block group (1st, 100th, etc.)
     list(id = geoid[id], coords = coords)
   }
 )
@@ -64,6 +66,29 @@ for (i in 1:length(blocks)){
 }
 
 toc()
+
+
+
+# attach block_id to train_Chicago
+
+train_Chicago$block_id <- block_id
+
+
+
+# read in population data
+
+chicago_popl <- read.csv("/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/ACS_17_5YR_B01003_with_ann.csv", 
+                         header = TRUE, skip = 1)
+
+names(chicago_popl)[names(chicago_popl) == "Id2"] <- "block_id"
+
+
+
+train_Chicago <- merge(train_Chicago, chicago_popl[c("block_id", "Estimate..Total")], by = "block_id", all.x = TRUE)
+
+save(train_Chicago, file = "backup_data_files/train_Chicago.RData")
+
+
 
 
 
