@@ -194,7 +194,7 @@ save(train_Atlanta, file = "backup_data_files/train_Atlanta.RData")
 
 ### Boston ###
 
-acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/MA_Suffolk_County_total_popl.csv"
+acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/MA_total_popl.csv"
 
 train_Boston <- merge_acs(train_Boston, acs_file_name, "Estimate..Total", "TotalPopulation")
 
@@ -204,7 +204,7 @@ save(train_Boston, file = "backup_data_files/train_Boston.RData")
 
 ### Philadelphia ###
 
-acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/PA_Philadelphia_County_total_popl.csv"
+acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/PA_total_popl.csv"
 
 train_Philadelphia <- merge_acs(train_Philadelphia, acs_file_name, "Estimate..Total", "TotalPopulation")
 
