@@ -46,21 +46,21 @@ my_append_geoid <- function(train_city, state_boundary_file) {
   
   # This will assign each city intersection a geoid
   
-  geoid <- vector("integer")
+  GeoID <- vector("integer")
   
   
   
   for (i in 1:length(bg)){
     x = bg[[i]]$coords 
     indicator = point.in.polygon(train_city$Latitude, train_city$Longitude, x$latitude, x$longitude) == 1
-    geoid[indicator] <- bg[[i]]$id
+    GeoID[indicator] <- bg[[i]]$id
   }
   
   
   
   # attach geoid to train_city
   
-  train_city$geoid <- geoid
+  train_city$GeoID <- GeoID
   
   return(train_city)
   
@@ -82,7 +82,7 @@ train_Chicago <- train[train$City == "Chicago",]
 
 IL_boundary_file <- "tl_2019_17_bg/tl_2019_17_bg.shp"
 
-# append the geoid to train_Chicago
+# append the GeoID to train_Chicago
 
 tic()
 
@@ -102,7 +102,7 @@ train_Atlanta <- train[train$City == "Atlanta",]
 
 GA_boundary_file <- "tl_2019_13_bg/tl_2019_13_bg.shp"
 
-# append the geoid to train_Atlanta
+# append the GeoID to train_Atlanta
 
 tic()
 
@@ -122,7 +122,7 @@ train_Boston <- train[train$City == "Boston",]
 
 MA_boundary_file <- "tl_2019_25_bg/tl_2019_25_bg.shp"
 
-# append the geoid to train_Boston
+# append the GeoID to train_Boston
 
 tic()
 
@@ -142,7 +142,7 @@ train_Philadelphia <- train[train$City == "Philadelphia",]
 
 PA_boundary_file <- "tl_2019_42_bg/tl_2019_42_bg.shp"
 
-# append the geoid to train_Philadelphia
+# append the GeoID to train_Philadelphia
 
 tic()
 
@@ -156,26 +156,66 @@ toc()
 
 
 
+#### Merging in Total Population Data ####
 
-#### merging in population data ####
+merge_acs <- function(train_city, acs_file_name, old_var_name, new_var_name) {
+  
+  acs_file <- read.csv(acs_file_name, header = TRUE, skip = 1)
+  
+  names(acs_file)[names(acs_file) == "Id2"] <- "GeoID"
+  
+  train_city <- merge(train_city, acs_file[c("GeoID", old_var_name)], by = "GeoID", all.x = TRUE)
+  
+  names(train_city)[names(train_city) == old_var_name] <- new_var_name
+  
+  return(train_city)
+  
+}
 
-chicago_popl <- read.csv("/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/ACS_17_5YR_B01003_with_ann.csv", 
-                         header = TRUE, skip = 1)
+### Chicago ###
 
-names(chicago_popl)[names(chicago_popl) == "Id2"] <- "geoid"
+acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/IL_Cook_County_total_popl.csv"
 
-
-
-train_Chicago <- merge(train_Chicago, chicago_popl[c("geoid", "Estimate..Total")], by = "geoid", all.x = TRUE)
+train_Chicago <- merge_acs(train_Chicago, acs_file_name, "Estimate..Total", "TotalPopulation")
 
 save(train_Chicago, file = "backup_data_files/train_Chicago.RData")
 
 
 
+### Atlanta ###
+
+acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/GA_total_popl.csv"
+
+train_Atlanta <- merge_acs(train_Atlanta, acs_file_name, "Estimate..Total", "TotalPopulation")
+
+save(train_Atlanta, file = "backup_data_files/train_Atlanta.RData")
+
+
+
+### Boston ###
+
+acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/MA_Suffolk_County_total_popl.csv"
+
+train_Boston <- merge_acs(train_Boston, acs_file_name, "Estimate..Total", "TotalPopulation")
+
+save(train_Boston, file = "backup_data_files/train_Boston.RData")
+
+
+
+### Philadelphia ###
+
+acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/PA_Philadelphia_County_total_popl.csv"
+
+train_Philadelphia <- merge_acs(train_Philadelphia, acs_file_name, "Estimate..Total", "TotalPopulation")
+
+save(train_Philadelphia, file = "backup_data_files/train_Philadelphia.RData")
 
 
 
 
+train <- rbind.data.frame(train_Atlanta, train_Boston, train_Chicago, train_Philadelphia)
+
+save(train, file = "new_train.RData")
 
 
 
