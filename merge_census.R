@@ -178,7 +178,7 @@ acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-cong
 
 train_Chicago <- merge_acs(train_Chicago, acs_file_name, "Estimate..Total", "TotalPopulation")
 
-save(train_Chicago, file = "backup_data_files/train_Chicago.RData")
+saveRDS(train_Chicago, file = "backup_data_files/train_Chicago_append_TotalPopulation.rds")
 
 
 
@@ -188,7 +188,7 @@ acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-cong
 
 train_Atlanta <- merge_acs(train_Atlanta, acs_file_name, "Estimate..Total", "TotalPopulation")
 
-save(train_Atlanta, file = "backup_data_files/train_Atlanta.RData")
+saveRDS(train_Atlanta, file = "backup_data_files/train_Atlanta_append_TotalPopulation.rds")
 
 
 
@@ -198,7 +198,7 @@ acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-cong
 
 train_Boston <- merge_acs(train_Boston, acs_file_name, "Estimate..Total", "TotalPopulation")
 
-save(train_Boston, file = "backup_data_files/train_Boston.RData")
+saveRDS(train_Boston, file = "backup_data_files/train_Boston_append_TotalPopulation.rds")
 
 
 
@@ -208,14 +208,14 @@ acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-cong
 
 train_Philadelphia <- merge_acs(train_Philadelphia, acs_file_name, "Estimate..Total", "TotalPopulation")
 
-save(train_Philadelphia, file = "backup_data_files/train_Philadelphia.RData")
+saveRDS(train_Philadelphia, file = "backup_data_files/train_Philadelphia_append_TotalPopulation.rds")
 
 
 
 
 train <- rbind.data.frame(train_Atlanta, train_Boston, train_Chicago, train_Philadelphia)
 
-save(train, file = "new_train.RData")
+saveRDS(train, file = "backup_data_files/train_append_TotalPopulation.rds")
 
 
 
