@@ -3,6 +3,7 @@ library(sf)
 library(ggplot2)
 library(sp)
 library(tictoc)
+library(tigris)
 
 # replace with correct directory. Can use file.choose()
 train <- read.csv("/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/bigquery-geotab-intersection-congestion-data/train.csv") 
@@ -68,7 +69,27 @@ my_append_geoid <- function(train_city, state_boundary_file) {
 
 
 
+# This is a second resort: in the case that my method above cannot match the block group, I use the tigris package to do it. 
+# The reason I don't use the tigris version of append_geoid is because it would take way too long to use it for all the records.
 
+my_append_geoid2 <- function(train_city) {
+  
+  missing_geoid <- which(is.na(train_city$GeoID))
+  
+  for (row_i in missing_geoid) {
+    
+    lat <- train_city[row_i,]$Latitude
+    lon <- train_city[row_i,]$Longitude
+    
+    GeoID_append <- append_geoid(data.frame("lat" = lat, "lon" = lon), "block group")[3]
+    
+    train_city$GeoID[row_i] <- GeoID_append
+    
+  }
+  
+  return(train_city)
+  
+}
 
 
 
@@ -87,6 +108,8 @@ IL_boundary_file <- "tl_2019_17_bg/tl_2019_17_bg.shp"
 tic()
 
 train_Chicago <- my_append_geoid(train_Chicago, IL_boundary_file)
+
+train_Chicago <- my_append_geoid2(train_Chicago)
 
 toc()
 
@@ -108,6 +131,8 @@ tic()
 
 train_Atlanta <- my_append_geoid(train_Atlanta, GA_boundary_file)
 
+train_Atlanta <- my_append_geoid2(train_Atlanta)
+
 toc()
 
 
@@ -128,6 +153,8 @@ tic()
 
 train_Boston <- my_append_geoid(train_Boston, MA_boundary_file)
 
+train_Boston <- my_append_geoid2(train_Boston)
+
 toc()
 
 
@@ -147,6 +174,14 @@ PA_boundary_file <- "tl_2019_42_bg/tl_2019_42_bg.shp"
 tic()
 
 train_Philadelphia <- my_append_geoid(train_Philadelphia, PA_boundary_file)
+
+# For some reason, the below code takes way too long.
+
+# train_Philadelphia <- my_append_geoid2(train_Philadelphia)
+
+# thus, I hard-code the missing GeoID. As it turns out, there's only one missing GeoID
+
+train_Philadelphia[is.na(train_Philadelphia$GeoID),]$GeoID <- 421010118004
 
 toc()
 
