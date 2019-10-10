@@ -47,7 +47,7 @@ my_append_geoid <- function(train_city, state_boundary_file) {
   
   # This will assign each city intersection a geoid
   
-  GeoID <- vector("integer")
+  GeoID <- vector("numeric")
   
   
   
@@ -83,7 +83,7 @@ my_append_geoid2 <- function(train_city) {
     
     GeoID_append <- append_geoid(data.frame("lat" = lat, "lon" = lon), "block group")[3]
     
-    train_city$GeoID[row_i] <- GeoID_append
+    train_city$GeoID[row_i] <- as.numeric(GeoID_append)
     
   }
   
