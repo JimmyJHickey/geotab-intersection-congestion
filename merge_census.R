@@ -1,7 +1,7 @@
 
 ########## move to script.R file later ##########
 
-install.packages("devtools")
+# install.packages("devtools")
 library(devtools)
 install_github("ropensci/drake")
 library(drake)
@@ -115,7 +115,7 @@ my_append_geoid2 <- function(train_city) {
 
 
 
-#### Atlanta ####
+### Atlanta ###
 
 train_Atlanta_append_GeoID <- drake_plan(
   # Extract Atlanta intersections
@@ -128,7 +128,7 @@ train_Atlanta_append_GeoID <- drake_plan(
 )
 
 
-#### Boston ####
+### Boston ###
 
 train_Boston_append_GeoID <- drake_plan(
   # Extract Boston intersections
@@ -142,7 +142,7 @@ train_Boston_append_GeoID <- drake_plan(
 
 
 
-#### Chicago ####
+### Chicago ###
 
 train_Chicago_append_GeoID <- drake_plan(
   # Extract Chicago intersections
@@ -156,7 +156,7 @@ train_Chicago_append_GeoID <- drake_plan(
 
 
 
-#### Philadelphia ####
+### Philadelphia ###
 
 train_Philadelphia_append_GeoID <- drake_plan(
   # Extract Philadelphia intersections
@@ -167,6 +167,35 @@ train_Philadelphia_append_GeoID <- drake_plan(
   train_Philadelphia1 = my_append_geoid(train_Philadelphia, PA_boundary_file),
   train_Philadelphia2 = my_append_geoid2(train_Philadelphia1)
 )
+
+
+
+#### Merging Land Area of each block group ####
+
+merge_land_area <- function(train_city, state_boundary_file) {
+  
+  state_boundary <- st_read(state_boundary_file)
+  
+  GeoID <- as.numeric(as.character(state_boundary$GEOID))
+  
+  LandArea <- state_boundary$ALAND
+  
+  train_city <- merge(train_city, cbind(GeoID, LandArea), by = "GeoID", all.x = TRUE)
+  
+  return(train_city)
+  
+}
+
+
+
+train_city_append_LandArea <- drake_plan(
+  # append the LandArea to train_Atlanta
+  train_Atlanta3 = merge_land_area(train_Atlanta2, GA_boundary_file),
+  train_Boston3 = merge_land_area(train_Boston2, MA_boundary_file),
+  train_Chicago3 = merge_land_area(train_Chicago2, IL_boundary_file),
+  train_Philadelphia3 = merge_land_area(train_Philadelphia2, PA_boundary_file)
+)
+
 
 
 
@@ -192,7 +221,7 @@ merge_acs <- function(train_city, acs_file_name, old_var_name, new_var_name) {
 
 train_Atlanta_append_TotalPopulation <- drake_plan(
   GA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/GA_total_popl.csv",
-  train_Atlanta3 = merge_acs(train_Atlanta2, GA_acs_file_name, "Estimate..Total", "TotalPopulation")
+  train_Atlanta4 = merge_acs(train_Atlanta3, GA_acs_file_name, "Estimate..Total", "TotalPopulation")
 )
 
 
@@ -201,7 +230,7 @@ train_Atlanta_append_TotalPopulation <- drake_plan(
 
 train_Boston_append_TotalPopulation <- drake_plan(
   MA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/MA_total_popl.csv",
-  train_Boston3 = merge_acs(train_Boston2, MA_acs_file_name, "Estimate..Total", "TotalPopulation")
+  train_Boston4 = merge_acs(train_Boston3, MA_acs_file_name, "Estimate..Total", "TotalPopulation")
 )
 
 
@@ -210,7 +239,7 @@ train_Boston_append_TotalPopulation <- drake_plan(
 
 train_Chicago_append_TotalPopulation <- drake_plan(
   IL_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/IL_Cook_County_total_popl.csv",
-  train_Chicago3 = merge_acs(train_Chicago2, IL_acs_file_name, "Estimate..Total", "TotalPopulation")
+  train_Chicago4 = merge_acs(train_Chicago3, IL_acs_file_name, "Estimate..Total", "TotalPopulation")
 )
 
 
@@ -219,7 +248,7 @@ train_Chicago_append_TotalPopulation <- drake_plan(
 
 train_Philadelphia_append_TotalPopulation <- drake_plan(
   PA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/PA_total_popl.csv",
-  train_Philadelphia3 = merge_acs(train_Philadelphia2, PA_acs_file_name, "Estimate..Total", "TotalPopulation")
+  train_Philadelphia4 = merge_acs(train_Philadelphia3, PA_acs_file_name, "Estimate..Total", "TotalPopulation")
 )
 
 
@@ -230,12 +259,13 @@ merge_census <- rbind(
   train_Boston_append_GeoID,
   train_Chicago_append_GeoID,
   train_Philadelphia_append_GeoID,
+  train_city_append_LandArea,
   train_Atlanta_append_TotalPopulation,
   train_Boston_append_TotalPopulation,
   train_Chicago_append_TotalPopulation,
   train_Philadelphia_append_TotalPopulation,
   drake_plan(
-    train_append_TotalPopulation = rbind.data.frame(train_Atlanta3, train_Boston3, train_Chicago3, train_Philadelphia3)
+    train_append_TotalPopulation = rbind.data.frame(train_Atlanta4, train_Boston4, train_Chicago4, train_Philadelphia4)
   )
 )
 
@@ -245,7 +275,14 @@ config <- drake_config(merge_census)
 
 vis_drake_graph(config)
 
+
+
+
 make(merge_census)
+
+history <- drake_history(analyze = TRUE)
+
+cache <- drake_cache()
 
 
 
