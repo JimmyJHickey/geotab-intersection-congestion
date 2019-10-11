@@ -188,8 +188,8 @@ merge_land_area <- function(train_city, state_boundary_file) {
 
 
 
+# append LandArea to each train_city
 train_city_append_LandArea <- drake_plan(
-  # append the LandArea to train_Atlanta
   train_Atlanta3 = merge_land_area(train_Atlanta2, GA_boundary_file),
   train_Boston3 = merge_land_area(train_Boston2, MA_boundary_file),
   train_Chicago3 = merge_land_area(train_Chicago2, IL_boundary_file),
@@ -198,58 +198,93 @@ train_city_append_LandArea <- drake_plan(
 
 
 
+# ### Atlanta ###
+# 
+# train_Atlanta_append_TotalPopulation <- drake_plan(
+#   GA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/GA_total_popl.csv",
+#   train_Atlanta4 = merge_acs(train_Atlanta3, GA_acs_file_name, "Estimate..Total", "TotalPopulation")
+# )
+# 
+# 
+# 
+# ### Boston ###
+# 
+# train_Boston_append_TotalPopulation <- drake_plan(
+#   MA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/MA_total_popl.csv",
+#   train_Boston4 = merge_acs(train_Boston3, MA_acs_file_name, "Estimate..Total", "TotalPopulation")
+# )
+# 
+# 
+# 
+# ### Chicago ###
+# 
+# train_Chicago_append_TotalPopulation <- drake_plan(
+#   IL_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/IL_Cook_County_total_popl.csv",
+#   train_Chicago4 = merge_acs(train_Chicago3, IL_acs_file_name, "Estimate..Total", "TotalPopulation")
+# )
+# 
+# 
+# 
+# ### Philadelphia ###
+# 
+# train_Philadelphia_append_TotalPopulation <- drake_plan(
+#   PA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/PA_total_popl.csv",
+#   train_Philadelphia4 = merge_acs(train_Philadelphia3, PA_acs_file_name, "Estimate..Total", "TotalPopulation")
+# )
 
-#### Merging in Total Population Data ####
 
-merge_acs <- function(train_city, acs_file_name, old_var_name, new_var_name) {
+
+
+
+
+#### Merging in Census Data ####
+
+merge_acs <- function(train_append_GeoID, acs_file, old_var_names, new_var_names) {
   
-  acs_file <- read.csv(acs_file_name, header = TRUE, skip = 1)
+  GeoID_char <- as.character(acs_file$GIS.Join.Match.Code)
   
-  names(acs_file)[names(acs_file) == "Id2"] <- "GeoID"
+  # formatting the GeoID to the same as that in train_append_GeoID
+  GeoID <- as.numeric(paste0(substring(GeoID_char, 2, 3), substring(GeoID_char, 5, 7), substring(GeoID_char, 9, 15)))
   
-  train_city <- merge(train_city, acs_file[c("GeoID", old_var_name)], by = "GeoID", all.x = TRUE)
+  train_append_GeoID <- merge(train_append_GeoID, data.frame(GeoID, acs_file[old_var_names]), by = "GeoID", all.x = TRUE)
   
-  names(train_city)[names(train_city) == old_var_name] <- new_var_name
+  names(train_append_GeoID)[names(train_append_GeoID) %in% old_var_names] <- new_var_names
   
-  return(train_city)
+  return(train_append_GeoID)
   
 }
 
 
 
-### Atlanta ###
+names_edit <- function(old_var_names) {
+  
+  # code TBD 
+  # code TBD 
+  # code TBD 
+  # code TBD 
+  # code TBD 
+  # code TBD 
+  # code TBD 
+  # code TBD 
+  
+  return(new_var_names)
+  
+}
 
-train_Atlanta_append_TotalPopulation <- drake_plan(
-  GA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/GA_total_popl.csv",
-  train_Atlanta4 = merge_acs(train_Atlanta3, GA_acs_file_name, "Estimate..Total", "TotalPopulation")
+
+
+# append census data to train
+train_append_census_plan <- drake_plan(
+  acs_file = read.csv("/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/census_data_and_variable_definitions/census_data.csv",
+                      header = TRUE, skip = 1),
+  old_var_names = names(acs_file)[38:183],
+  new_var_names = names_edit(old_var_names),
+  train_append_census = merge_acs(train_append_GeoID, acs_file_name, old_var_names, new_var_names)
 )
 
 
 
-### Boston ###
 
-train_Boston_append_TotalPopulation <- drake_plan(
-  MA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/MA_total_popl.csv",
-  train_Boston4 = merge_acs(train_Boston3, MA_acs_file_name, "Estimate..Total", "TotalPopulation")
-)
-
-
-
-### Chicago ###
-
-train_Chicago_append_TotalPopulation <- drake_plan(
-  IL_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/IL_Cook_County_total_popl.csv",
-  train_Chicago4 = merge_acs(train_Chicago3, IL_acs_file_name, "Estimate..Total", "TotalPopulation")
-)
-
-
-
-### Philadelphia ###
-
-train_Philadelphia_append_TotalPopulation <- drake_plan(
-  PA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/PA_total_popl.csv",
-  train_Philadelphia4 = merge_acs(train_Philadelphia3, PA_acs_file_name, "Estimate..Total", "TotalPopulation")
-)
 
 
 
@@ -260,14 +295,13 @@ merge_census <- rbind(
   train_Chicago_append_GeoID,
   train_Philadelphia_append_GeoID,
   train_city_append_LandArea,
-  train_Atlanta_append_TotalPopulation,
-  train_Boston_append_TotalPopulation,
-  train_Chicago_append_TotalPopulation,
-  train_Philadelphia_append_TotalPopulation,
   drake_plan(
-    train_append_TotalPopulation = rbind.data.frame(train_Atlanta4, train_Boston4, train_Chicago4, train_Philadelphia4)
-  )
+    train_append_GeoID = rbind.data.frame(train_Atlanta4, train_Boston4, train_Chicago4, train_Philadelphia4)
+  ),
+  train_append_census_plan
 )
+
+
 
 
 
@@ -286,6 +320,7 @@ cache <- drake_cache()
 
 
 
+# save final data in convenient rds/RData
 
 
 
