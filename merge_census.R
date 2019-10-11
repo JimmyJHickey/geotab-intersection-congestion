@@ -1,17 +1,29 @@
 
+########## move to script.R file later ##########
+
+install.packages("devtools")
+library(devtools)
+install_github("ropensci/drake")
+library(drake)
+
 library(sf)
 library(ggplot2)
 library(sp)
 library(tictoc)
 library(tigris)
 
-# replace with correct directory. Can use file.choose()
-train <- read.csv("/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/bigquery-geotab-intersection-congestion-data/train.csv") 
-
-# replace with correct directory. Can use file.choose()
-test <- read.csv("/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/bigquery-geotab-intersection-congestion-data/test.csv") 
 
 
+kaggle_data_read <- drake_plan(
+  # replace with correct directory. Can use file.choose()
+  train = read.csv("/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/bigquery-geotab-intersection-congestion-data/train.csv"), 
+  # replace with correct directory. Can use file.choose()
+  test = read.csv("/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/bigquery-geotab-intersection-congestion-data/test.csv") 
+)
+
+
+
+########## specific merge_census code ##########
 
 #### my personal append_geoid function, renamed as my_append_geoid
 
@@ -70,20 +82,30 @@ my_append_geoid <- function(train_city, state_boundary_file) {
 
 
 # This is a second resort: in the case that my method above cannot match the block group, I use the tigris package to do it. 
-# The reason I don't use the tigris version of append_geoid is because it would take way too long to use it for all the records.
+# The reason I don't use the tigris version of append_geoid only is because it would take way too long to use it for all the records.
 
 my_append_geoid2 <- function(train_city) {
   
-  missing_geoid <- which(is.na(train_city$GeoID))
-  
-  for (row_i in missing_geoid) {
+  if (train_city$City[1] != "Philadelphia") {
     
-    lat <- train_city[row_i,]$Latitude
-    lon <- train_city[row_i,]$Longitude
+    missing_geoid <- which(is.na(train_city$GeoID))
     
-    GeoID_append <- append_geoid(data.frame("lat" = lat, "lon" = lon), "block group")[3]
+    for (row_i in missing_geoid) {
+      
+      lat <- train_city[row_i,]$Latitude
+      lon <- train_city[row_i,]$Longitude
+      
+      GeoID_append <- append_geoid(data.frame("lat" = lat, "lon" = lon), "block group")[3]
+      
+      train_city$GeoID[row_i] <- as.numeric(GeoID_append)
+      
+    } 
     
-    train_city$GeoID[row_i] <- as.numeric(GeoID_append)
+  } else if (train_city$City[1] == "Philadelphia") {
+    
+    # For some reason, the above code takes way too long for train_Philadelphia.
+    # thus, I hard-code the missing GeoID. As it turns out, there's only one missing GeoID for Philadelphia
+    train_city[is.na(train_city$GeoID),]$GeoID = 421010118004
     
   }
   
@@ -93,101 +115,58 @@ my_append_geoid2 <- function(train_city) {
 
 
 
-#### Chicago ####
-
-# Extract Chicago intersections
-
-train_Chicago <- train[train$City == "Chicago",] 
-
-# Read in Block Group shapefile
-
-IL_boundary_file <- "tl_2019_17_bg/tl_2019_17_bg.shp"
-
-# append the GeoID to train_Chicago
-
-tic()
-
-train_Chicago <- my_append_geoid(train_Chicago, IL_boundary_file)
-
-train_Chicago <- my_append_geoid2(train_Chicago)
-
-toc()
-
-
-
 #### Atlanta ####
 
-# Extract Atlanta intersections
-
-train_Atlanta <- train[train$City == "Atlanta",] 
-
-# Read in Block Group shapefile
-
-GA_boundary_file <- "tl_2019_13_bg/tl_2019_13_bg.shp"
-
-# append the GeoID to train_Atlanta
-
-tic()
-
-train_Atlanta <- my_append_geoid(train_Atlanta, GA_boundary_file)
-
-train_Atlanta <- my_append_geoid2(train_Atlanta)
-
-toc()
-
+train_Atlanta_append_GeoID <- drake_plan(
+  # Extract Atlanta intersections
+  train_Atlanta = train[train$City == "Atlanta",],
+  # Read in Block Group shapefile
+  GA_boundary_file = "tl_2019_13_bg/tl_2019_13_bg.shp",
+  # append the GeoID to train_Atlanta
+  train_Atlanta1 = my_append_geoid(train_Atlanta, GA_boundary_file),
+  train_Atlanta2 = my_append_geoid2(train_Atlanta1)
+)
 
 
 #### Boston ####
 
-# Extract Boston intersections
+train_Boston_append_GeoID <- drake_plan(
+  # Extract Boston intersections
+  train_Boston = train[train$City == "Boston",],
+  # Read in Block Group shapefile
+  MA_boundary_file = "tl_2019_25_bg/tl_2019_25_bg.shp",
+  # append the GeoID to train_Boston
+  train_Boston1 = my_append_geoid(train_Boston, MA_boundary_file),
+  train_Boston2 = my_append_geoid2(train_Boston1)
+)
 
-train_Boston <- train[train$City == "Boston",] 
 
-# Read in Block Group shapefile
 
-MA_boundary_file <- "tl_2019_25_bg/tl_2019_25_bg.shp"
+#### Chicago ####
 
-# append the GeoID to train_Boston
-
-tic()
-
-train_Boston <- my_append_geoid(train_Boston, MA_boundary_file)
-
-train_Boston <- my_append_geoid2(train_Boston)
-
-toc()
+train_Chicago_append_GeoID <- drake_plan(
+  # Extract Chicago intersections
+  train_Chicago = train[train$City == "Chicago",],
+  # Read in Block Group shapefile
+  IL_boundary_file = "tl_2019_17_bg/tl_2019_17_bg.shp",
+  # append the GeoID to train_Chicago
+  train_Chicago1 = my_append_geoid(train_Chicago, IL_boundary_file),
+  train_Chicago2 = my_append_geoid2(train_Chicago1)
+)
 
 
 
 #### Philadelphia ####
 
-# Extract Philadelphia intersections
-
-train_Philadelphia <- train[train$City == "Philadelphia",] 
-
-# Read in Block Group shapefile
-
-PA_boundary_file <- "tl_2019_42_bg/tl_2019_42_bg.shp"
-
-# append the GeoID to train_Philadelphia
-
-tic()
-
-train_Philadelphia <- my_append_geoid(train_Philadelphia, PA_boundary_file)
-
-# For some reason, the below code takes way too long.
-
-# train_Philadelphia <- my_append_geoid2(train_Philadelphia)
-
-# thus, I hard-code the missing GeoID. As it turns out, there's only one missing GeoID
-
-train_Philadelphia[is.na(train_Philadelphia$GeoID),]$GeoID <- 421010118004
-
-toc()
-
-
-
-
+train_Philadelphia_append_GeoID <- drake_plan(
+  # Extract Philadelphia intersections
+  train_Philadelphia = train[train$City == "Philadelphia",],
+  # Read in Block Group shapefile
+  PA_boundary_file = "tl_2019_42_bg/tl_2019_42_bg.shp",
+  # append the GeoID to train_Philadelphia
+  train_Philadelphia1 = my_append_geoid(train_Philadelphia, PA_boundary_file),
+  train_Philadelphia2 = my_append_geoid2(train_Philadelphia1)
+)
 
 
 
@@ -207,58 +186,66 @@ merge_acs <- function(train_city, acs_file_name, old_var_name, new_var_name) {
   
 }
 
-### Chicago ###
-
-acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/IL_Cook_County_total_popl.csv"
-
-train_Chicago <- merge_acs(train_Chicago, acs_file_name, "Estimate..Total", "TotalPopulation")
-
-saveRDS(train_Chicago, file = "backup_data_files/train_Chicago_append_TotalPopulation.rds")
-
 
 
 ### Atlanta ###
 
-acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/GA_total_popl.csv"
-
-train_Atlanta <- merge_acs(train_Atlanta, acs_file_name, "Estimate..Total", "TotalPopulation")
-
-saveRDS(train_Atlanta, file = "backup_data_files/train_Atlanta_append_TotalPopulation.rds")
+train_Atlanta_append_TotalPopulation <- drake_plan(
+  GA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/GA_total_popl.csv",
+  train_Atlanta3 = merge_acs(train_Atlanta2, GA_acs_file_name, "Estimate..Total", "TotalPopulation")
+)
 
 
 
 ### Boston ###
 
-acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/MA_total_popl.csv"
+train_Boston_append_TotalPopulation <- drake_plan(
+  MA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/MA_total_popl.csv",
+  train_Boston3 = merge_acs(train_Boston2, MA_acs_file_name, "Estimate..Total", "TotalPopulation")
+)
 
-train_Boston <- merge_acs(train_Boston, acs_file_name, "Estimate..Total", "TotalPopulation")
 
-saveRDS(train_Boston, file = "backup_data_files/train_Boston_append_TotalPopulation.rds")
+
+### Chicago ###
+
+train_Chicago_append_TotalPopulation <- drake_plan(
+  IL_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/IL_Cook_County_total_popl.csv",
+  train_Chicago3 = merge_acs(train_Chicago2, IL_acs_file_name, "Estimate..Total", "TotalPopulation")
+)
 
 
 
 ### Philadelphia ###
 
-acs_file_name <- "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/PA_total_popl.csv"
-
-train_Philadelphia <- merge_acs(train_Philadelphia, acs_file_name, "Estimate..Total", "TotalPopulation")
-
-saveRDS(train_Philadelphia, file = "backup_data_files/train_Philadelphia_append_TotalPopulation.rds")
-
+train_Philadelphia_append_TotalPopulation <- drake_plan(
+  PA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/PA_total_popl.csv",
+  train_Philadelphia3 = merge_acs(train_Philadelphia2, PA_acs_file_name, "Estimate..Total", "TotalPopulation")
+)
 
 
 
-train <- rbind.data.frame(train_Atlanta, train_Boston, train_Chicago, train_Philadelphia)
+merge_census <- rbind(
+  kaggle_data_read,
+  train_Atlanta_append_GeoID,
+  train_Boston_append_GeoID,
+  train_Chicago_append_GeoID,
+  train_Philadelphia_append_GeoID,
+  train_Atlanta_append_TotalPopulation,
+  train_Boston_append_TotalPopulation,
+  train_Chicago_append_TotalPopulation,
+  train_Philadelphia_append_TotalPopulation,
+  drake_plan(
+    train_append_TotalPopulation = rbind.data.frame(train_Atlanta3, train_Boston3, train_Chicago3, train_Philadelphia3)
+  )
+)
 
-saveRDS(train, file = "backup_data_files/train_append_TotalPopulation.rds")
 
 
+config <- drake_config(merge_census)
 
+vis_drake_graph(config)
 
-
-
-
-
+make(merge_census)
 
 
 
