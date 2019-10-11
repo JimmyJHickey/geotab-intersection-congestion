@@ -4,10 +4,7 @@
 # 2019-10-11
 ####
 
-
-# FUTURE JIMMY
-# Try relative angles
-
+import pandas as pd
 
 # turn type calculator
 def turn_type(entry, exit):
@@ -29,64 +26,41 @@ def turn_type(entry, exit):
 
 	diff = (entry_deg - exit_deg) % 360
 
-	turn_type = ''
+	turn = ''
 
 	if diff == 0:
-		turn_type = "Straight"
+		turn = "Straight"
 	elif diff == 180:
-		turn_type = "U"
+		turn = "U"
 	elif diff > 0 and diff < 180:
-		turn_type = "left"
+		turn = "Left"
 	elif diff > 180:
-		turn_type = "right"
+		turn = "Right"
 
-	return(turn_type)
+	return(turn)
+
+
+def write_to_file(input_df, output_file_path):
+
+	with open(output_file_path, 'w+') as out:
+		for index, row in input_df.iterrows():
+			out_string = str(row["RowId"]) + "," + turn_type(row["EntryHeading"], row["ExitHeading"]) + '\n'
+			out.write(out_string)
+
+
 
 def main():
-	print("~~~~~~~~~ CARDINAL RIGHT TURNS ~~~~~~~~~")
-	print(turn_type("N", "E"))
-	print(turn_type("E", "S"))
-	print(turn_type("W", "N"))
-	print(turn_type("S", "W"))
+	training_data = "/Users/jimmy/git/geotab-intersection-congestion/data/train.csv"
+	testing_data = "/Users/jimmy/git/geotab-intersection-congestion/data/test.csv"
 
+	training_output = "/Users/jimmy/git/geotab-intersection-congestion/data/train_turn-angle.csv"
+	test_output = "/Users/jimmy/git/geotab-intersection-congestion/data/test_turn-angle.csv"
 
+	training = pd.read_csv(training_data)
+	test = pd.read_csv(testing_data)
 
-
-	print("~~~~~~~~~ CARDINAL LEFT TURNS ~~~~~~~~~")
-	print(turn_type("W", "S"))
-	print(turn_type("S", "E"))
-	print(turn_type("E", "N"))
-	print(turn_type("N", "W"))
-
-
-	print("~~~~~~~~~ CARDINAL LEFT TURNS TO ANGLES ~~~~~~~~~")
-	print(turn_type("W", "SE"))
-	print(turn_type("W", "SW"))
-
-	print(turn_type("S", "NE"))
-	print(turn_type("S", "NW"))
-
-	print(turn_type("N", "SW"))
-	print(turn_type("N", "NW"))
-
-	print(turn_type("E", "NW"))
-	print(turn_type("E", "NE"))
-
-
-	print("~~~~~~~~~~~~~~~~~~~ ANGLE LEFT TURNS TO CARDINAL ~~~~~~~~~~~~~~~~~")
-	print(turn_type("NE","N"))
-	print(turn_type("NE","W"))
-
-	print(turn_type("NW","S"))
-	print(turn_type("NW","W"))
-
-	print(turn_type("SE","N"))
-	print(turn_type("SE","E"))
-
-
-	print("~~~~~~~~~~~~~~~~~~ uh oh~~~~~~~~~~~~~~~~~~")
-	print(turn_type("N", "N"))
-	print(turn_type("S", "N"))
+	write_to_file(training, training_output)
+	write_to_file(test, test_output)
 
 if __name__ == "__main__":
 	main()
