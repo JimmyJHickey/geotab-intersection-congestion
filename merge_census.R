@@ -277,9 +277,9 @@ names_edit <- function(old_var_names) {
 train_append_census_plan <- drake_plan(
   acs_file = read.csv("/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/census_data_and_variable_definitions/census_data.csv",
                       header = TRUE, skip = 1),
-  old_var_names = names(acs_file)[38:183],
-  new_var_names = names_edit(old_var_names),
-  train_append_census = merge_acs(train_append_GeoID, acs_file_name, old_var_names, new_var_names)
+  old_var_names = names(acs_file)[38:43], # 38:183
+  new_var_names = c("TotalPopulation", "TotalWorkersOver16", "LivingInAPlace", "LivingInAPlace.WorkedInPlaceOfResidence", "LivingInAPlace.WorkedOutsidePlaceOfResidence", "NotLivingInAPlace"), # names_edit(old_var_names)
+  train_append_census = merge_acs(train_append_GeoID, acs_file, old_var_names, new_var_names)
 )
 
 
@@ -296,7 +296,7 @@ merge_census <- rbind(
   train_Philadelphia_append_GeoID,
   train_city_append_LandArea,
   drake_plan(
-    train_append_GeoID = rbind.data.frame(train_Atlanta4, train_Boston4, train_Chicago4, train_Philadelphia4)
+    train_append_GeoID = rbind.data.frame(train_Atlanta3, train_Boston3, train_Chicago3, train_Philadelphia3)
   ),
   train_append_census_plan
 )
