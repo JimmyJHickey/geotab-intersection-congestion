@@ -11,6 +11,7 @@ library(ggplot2)
 library(sp)
 library(tictoc)
 library(tigris)
+library(Hmisc)
 
 
 
@@ -180,7 +181,9 @@ merge_land_area <- function(train_city, state_boundary_file) {
   
   LandArea <- state_boundary$ALAND
   
-  train_city <- merge(train_city, cbind(GeoID, LandArea), by = "GeoID", all.x = TRUE)
+  # to automatically merge in the geometry (coordinates of the block group boundary) do smth like 
+  # cbind(state_boundary$GEOID, state_boundary$ALAND), (remember to rename GEOID and ALAND accordingly)
+  train_city <- merge(train_city, cbind(GeoID, LandArea), by = "GeoID", all.x = TRUE) 
   
   return(train_city)
   
@@ -198,45 +201,6 @@ train_city_append_LandArea <- drake_plan(
 
 
 
-# ### Atlanta ###
-# 
-# train_Atlanta_append_TotalPopulation <- drake_plan(
-#   GA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/GA_total_popl.csv",
-#   train_Atlanta4 = merge_acs(train_Atlanta3, GA_acs_file_name, "Estimate..Total", "TotalPopulation")
-# )
-# 
-# 
-# 
-# ### Boston ###
-# 
-# train_Boston_append_TotalPopulation <- drake_plan(
-#   MA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/MA_total_popl.csv",
-#   train_Boston4 = merge_acs(train_Boston3, MA_acs_file_name, "Estimate..Total", "TotalPopulation")
-# )
-# 
-# 
-# 
-# ### Chicago ###
-# 
-# train_Chicago_append_TotalPopulation <- drake_plan(
-#   IL_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/IL_Cook_County_total_popl.csv",
-#   train_Chicago4 = merge_acs(train_Chicago3, IL_acs_file_name, "Estimate..Total", "TotalPopulation")
-# )
-# 
-# 
-# 
-# ### Philadelphia ###
-# 
-# train_Philadelphia_append_TotalPopulation <- drake_plan(
-#   PA_acs_file_name = "/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/PA_total_popl.csv",
-#   train_Philadelphia4 = merge_acs(train_Philadelphia3, PA_acs_file_name, "Estimate..Total", "TotalPopulation")
-# )
-
-
-
-
-
-
 #### Merging in Census Data ####
 
 merge_acs <- function(train_append_GeoID, acs_file, old_var_names, new_var_names) {
@@ -246,11 +210,26 @@ merge_acs <- function(train_append_GeoID, acs_file, old_var_names, new_var_names
   # formatting the GeoID to the same as that in train_append_GeoID
   GeoID <- as.numeric(paste0(substring(GeoID_char, 2, 3), substring(GeoID_char, 5, 7), substring(GeoID_char, 9, 15)))
   
-  train_append_GeoID <- merge(train_append_GeoID, data.frame(GeoID, acs_file[old_var_names]), by = "GeoID", all.x = TRUE)
+  train_append_census <- merge(train_append_GeoID, data.frame(GeoID, acs_file[old_var_names]), by = "GeoID", all.x = TRUE)
   
-  names(train_append_GeoID)[names(train_append_GeoID) %in% old_var_names] <- new_var_names
+  names(train_append_census)[names(train_append_census) %in% old_var_names] <- new_var_names
   
-  return(train_append_GeoID)
+  # drop columns if its name contains "Duplicate" or it has NAs
+  
+  column_drop <- c()
+  
+  for (i in 1:length(names(train_append_census))) {
+    
+    if (grepl("Duplicate", names(train_append_census)[i])) {column_drop <- append(column_drop, i)}
+    else if (sum(is.na(train_append_census[,i])) != 0) {column_drop <- append(column_drop, i)}
+    
+  }
+  
+  train_append_census <- train_append_census[,-column_drop]
+  
+  #code TBD
+  
+  return(train_append_census)
   
 }
 
@@ -258,14 +237,56 @@ merge_acs <- function(train_append_GeoID, acs_file, old_var_names, new_var_names
 
 names_edit <- function(old_var_names) {
   
-  # code TBD 
-  # code TBD 
-  # code TBD 
-  # code TBD 
-  # code TBD 
-  # code TBD 
-  # code TBD 
-  # code TBD 
+  # regular expression cases
+  # number first (time to go to work)
+  # am vs pm
+  
+  new_var_names <- rep("", length(old_var_names))
+  
+  # taking care of variables named "Estimates..Total", "Estimates..Total.1",...
+  new_var_names[old_var_names == "Estimates..Total"] <- "TotalPopulation"
+  new_var_names[old_var_names == "Estimates..Total.1"] <- "TotalWorkers"
+  new_var_names[old_var_names == "Estimates..Total.2"] <- "Duplicate" # this is the same as "Estimates..Total.1"
+  new_var_names[old_var_names == "Estimates..Total.3"] <- "TotalWorkersNotWorkFromHome"
+  new_var_names[old_var_names == "Estimates..Total.4"] <- "Duplicate.1" # this is the same as "Estimates..Total.3"
+  new_var_names[old_var_names == "Estimates..Total.5"] <- "TotalPopulation16YrsAndOver"
+  new_var_names[old_var_names == "Estimates..Total.6"] <- "TotalCivilianEmployed" # not subset nor superset of TotalWorkers, weirdly enough
+  new_var_names[old_var_names == "Estimates..Total.7"] <- "TotalHousingUnits"
+  
+  # for the other old_var_names
+  old_var_names_not_total <- old_var_names[!grepl("Estimates..Total", old_var_names)]
+  
+  old_var_names_shorten <- sub("Estimates..", "", old_var_names_not_total)
+  
+  var_name_split <- strsplit(old_var_names_shorten, "\\.+")
+  
+  var_name_split_capitalize <- lapply(var_name_split, capitalize)
+  
+  var_name_paste <- lapply(var_name_split_capitalize, paste, collapse = '')
+  
+  new_var_names_pre <- unlist(var_name_paste)
+  
+  new_var_names_empty_idx <- which(new_var_names == "")
+  
+  for (i in 1:length(new_var_names_pre)) {
+    
+    if (grepl("AM|PM", new_var_names_pre[i])) { # special case: time leaving home to go to work
+      new_var_names[new_var_names_empty_idx[i]] <- paste0("TimeLeavingHome", new_var_names_pre[i])
+    } else if (grepl("Minutes", new_var_names_pre[i])) { # special case: travel time to work 
+      new_var_names[new_var_names_empty_idx[i]] <- paste0("TravelTime", new_var_names_pre[i])
+    } else if (grepl("^Male$|^Female$", new_var_names_pre[i])) { # (^Male([.]\d)?$)|(^Female([.]\d)?$)
+      new_var_names[new_var_names_empty_idx[i]] <- paste0(new_var_names_pre[i], "Workers")
+    } else if (grepl("^Male1$|^Female1$", new_var_names_pre[i])) {
+      new_var_names[new_var_names_empty_idx[i]] <- paste0(sub(1, "", new_var_names_pre[i]), "CivilianEmployed")
+    } else { # normal case
+      new_var_names[new_var_names_empty_idx[i]] <- new_var_names_pre[i]
+    }
+    
+  }
+  
+  # concatenate "Raw" to the front of each variable to indicate that they're raw counts 
+  # (except for Median household income, but I'll label it raw anyway)
+  new_var_names <- unlist(lapply(new_var_names, paste0, "Raw"))
   
   return(new_var_names)
   
@@ -277,8 +298,9 @@ names_edit <- function(old_var_names) {
 train_append_census_plan <- drake_plan(
   acs_file = read.csv("/Users/Alvin/Documents/NCSU_Fall_2019/geotab-intersection-congestion/external_data/census_data_and_variable_definitions/census_data.csv",
                       header = TRUE, skip = 1),
-  old_var_names = names(acs_file)[38:43], # 38:183
-  new_var_names = c("TotalPopulation", "TotalWorkersOver16", "LivingInAPlace", "LivingInAPlace.WorkedInPlaceOfResidence", "LivingInAPlace.WorkedOutsidePlaceOfResidence", "NotLivingInAPlace"), # names_edit(old_var_names)
+  # variables 1-37 are geographic identifiers, variables 54-65 have too many NAs, and variables 184-330 are the margins of error
+  old_var_names = names(acs_file)[c(38:53, 66:183)], # 134 variables after omitting the listed variables above
+  new_var_names = names_edit(old_var_names),
   train_append_census = merge_acs(train_append_GeoID, acs_file, old_var_names, new_var_names)
 )
 

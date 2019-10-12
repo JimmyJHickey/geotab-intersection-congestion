@@ -31,12 +31,12 @@ Data type(s):     (E) Estimates
 Tables:
  
 1. Total Population
-   Universe:    Total population
+   Universe:    Total population - Estimates..Total
    Source code: B01003
    NHGIS code:  AHY1
  
 2. Sex of Workers by Place of Work--Place Level
-   Universe:    Workers 16 years and over
+   Universe:    Workers 16 years and over - Estimates..Total.1
    Source code: B08008
    NHGIS code:  AHZJ
  
@@ -46,17 +46,17 @@ Tables:
    NHGIS code:  AHZQ
  
 4. Means of Transportation to Work
-   Universe:    Workers 16 years and over
+   Universe:    Workers 16 years and over - Estimates..Total.2
    Source code: B08301
    NHGIS code:  AHZR
  
 5. Time Leaving Home to Go to Work
-   Universe:    Workers 16 years and over who did not work at home
+   Universe:    Workers 16 years and over who did not work at home - Estimates..Total.3
    Source code: B08302
    NHGIS code:  AHZS
  
 6. Travel Time to Work
-   Universe:    Workers 16 years and over who did not work at home
+   Universe:    Workers 16 years and over who did not work at home - Estimates..Total.4
    Source code: B08303
    NHGIS code:  AHZT
  
@@ -66,17 +66,17 @@ Tables:
    NHGIS code:  AH1P
  
 8. Employment Status for the Population 16 Years and Over
-   Universe:    Population 16 years and over
+   Universe:    Population 16 years and over - Estimates..Total.5
    Source code: B23025
    NHGIS code:  AH3P
  
 9. Sex by Industry for the Civilian Employed Population 16 Years and Over
-   Universe:    Civilian employed population 16 years and over
+   Universe:    Civilian employed population 16 years and over - Estimates..Total.6
    Source code: C24030
    NHGIS code:  AH33
  
 10. Occupancy Status
-    Universe:    Housing units
+    Universe:    Housing units - Estimates..Total.7
     Source code: B25002
     NHGIS code:  AH36
  
