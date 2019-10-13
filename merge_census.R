@@ -381,7 +381,7 @@ loadd(train_normalize_census)
 
 save(train_normalize_census, file = "backup_data_files/train_normalize_census.RData")
 
-
+write.csv(train_normalize_census, file = "backup_data_files/train_normalize_census.csv")
 
 # save final data in convenient rds/RData
 
