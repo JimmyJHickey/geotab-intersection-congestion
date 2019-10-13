@@ -1,0 +1,601 @@
+--------------------------------------------------------------------------------
+Codebook for NHGIS data file 'nhgis0003_ds233_20175_2017_blck_grp'
+--------------------------------------------------------------------------------
+ 
+Contents
+    - Data Summary
+    - Data Dictionary
+    - Citation and Use
+ 
+Additional documentation on NHGIS data sources is available at: 
+    https://www.nhgis.org/documentation/tabular-data 
+ 
+--------------------------------------------------------------------------------
+Data Summary
+--------------------------------------------------------------------------------
+ 
+Year:             2013-2017
+Geographic level: Block Group (by State--County--Census Tract)
+Extent:           Georgia
+                  Illinois
+                  Massachusetts
+                  Pennsylvania
+Dataset:          2017 American Community Survey: 5-Year Data [2013-2017, Block Groups & Larger Areas]
+   NHGIS code:    2013_2017_ACS5a
+   NHGIS ID:      ds233
+Breakdown(s):     Geographic Subarea:
+                     Total area (00)
+Data type(s):     (E) Estimates
+                  (M) Margins of error
+ 
+Tables:
+ 
+1. Total Population
+   Universe:    Total population - Estimates..Total
+   Source code: B01003
+   NHGIS code:  AHY1
+ 
+2. Sex of Workers by Place of Work--Place Level
+   Universe:    Workers 16 years and over - Estimates..Total.1
+   Source code: B08008
+   NHGIS code:  AHZJ
+ 
+3. Aggregate Travel Time to Work (in Minutes) of Workers by Means of Transportation to Work
+   Universe:    Workers 16 years and over who did not work at home
+   Source code: B08136
+   NHGIS code:  AHZQ
+ 
+4. Means of Transportation to Work
+   Universe:    Workers 16 years and over - Estimates..Total.2
+   Source code: B08301
+   NHGIS code:  AHZR
+ 
+5. Time Leaving Home to Go to Work
+   Universe:    Workers 16 years and over who did not work at home - Estimates..Total.3
+   Source code: B08302
+   NHGIS code:  AHZS
+ 
+6. Travel Time to Work
+   Universe:    Workers 16 years and over who did not work at home - Estimates..Total.4
+   Source code: B08303
+   NHGIS code:  AHZT
+ 
+7. Median Household Income in the Past 12 Months (in 2017 Inflation-Adjusted Dollars)
+   Universe:    Households
+   Source code: B19013
+   NHGIS code:  AH1P
+ 
+8. Employment Status for the Population 16 Years and Over
+   Universe:    Population 16 years and over - Estimates..Total.5
+   Source code: B23025
+   NHGIS code:  AH3P
+ 
+9. Sex by Industry for the Civilian Employed Population 16 Years and Over
+   Universe:    Civilian employed population 16 years and over - Estimates..Total.6
+   Source code: C24030
+   NHGIS code:  AH33
+ 
+10. Occupancy Status
+    Universe:    Housing units - Estimates..Total.7
+    Source code: B25002
+    NHGIS code:  AH36
+ 
+11. Aggregate Number of Vehicles Available by Tenure
+    Universe:    Occupied housing units
+    Source code: B25046
+    NHGIS code:  AH5B
+ 
+--------------------------------------------------------------------------------
+Data Dictionary
+--------------------------------------------------------------------------------
+ 
+Context Fields 
+        GISJOIN:     GIS Join Match Code
+        YEAR:        Data File Year
+        REGIONA:     Region Code
+        DIVISIONA:   Division Code
+        STATE:       State Name
+        STATEA:      State Code
+        COUNTY:      County Name
+        COUNTYA:     County Code
+        COUSUBA:     County Subdivision Code
+        PLACEA:      Place Code
+        TRACTA:      Census Tract Code
+        BLKGRPA:     Block Group Code
+        CONCITA:     Consolidated City Code
+        AIANHHA:     American Indian Area/Alaska Native Area/Hawaiian Home Land Code
+        RES_ONLYA:   American Indian Area/Alaska Native Area (Reservation or Statistical Entity Only) Code
+        TRUSTA:      American Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land Code
+        AITSCEA:     Tribal Subdivision/Remainder Code
+        ANRCA:       Alaska Native Regional Corporation Code
+        CBSAA:       Metropolitan Statistical Area/Micropolitan Statistical Area Code
+        CSAA:        Combined Statistical Area Code
+        METDIVA:     Metropolitan Division Code
+        NECTAA:      New England City and Town Area Code
+        CNECTAA:     Combined New England City and Town Area Code
+        NECTADIVA:   New England City and Town Area Division Code
+        UAA:         Urban Area Code
+        CDCURRA:     Congressional District (2017-2019, 115th Congress) Code
+        SLDUA:       State Legislative District (Upper Chamber) Code
+        SLDLA:       State Legislative District (Lower Chamber) Code
+        ZCTA5A:      5-Digit ZIP Code Tabulation Area Code
+        SUBMCDA:     Subminor Civil Division Code
+        SDELMA:      School District (Elementary)/Remainder Code
+        SDSECA:      School District (Secondary)/Remainder Code
+        SDUNIA:      School District (Unified)/Remainder Code
+        PUMA5A:      Public Use Microdata Sample Area (PUMA) Code
+        BTTRA:       Tribal Census Tract Code
+        BTBGA:       Tribal Block Group Code
+ 
+Data Type (E):
+    Estimates
+ 
+        NAME_E:      Area Name
+ 
+    Table 1:     Total Population
+    Universe:    Total population
+    Source code: B01003
+    NHGIS code:  AHY1
+        AHY1E001:    Total
+ 
+    Table 2:     Sex of Workers by Place of Work--Place Level
+    Universe:    Workers 16 years and over
+    Source code: B08008
+    NHGIS code:  AHZJ
+        AHZJE001:    Total
+        AHZJE002:    Living in a place
+        AHZJE003:    Living in a place: Worked in place of residence
+        AHZJE004:    Living in a place: Worked outside place of residence
+        AHZJE005:    Not living in a place
+        AHZJE006:    Male
+        AHZJE007:    Male: Living in a place
+        AHZJE008:    Male: Living in a place: Worked in place of residence
+        AHZJE009:    Male: Living in a place: Worked outside place of residence
+        AHZJE010:    Male: Not living in a place
+        AHZJE011:    Female
+        AHZJE012:    Female: Living in a place
+        AHZJE013:    Female: Living in a place: Worked in place of residence
+        AHZJE014:    Female: Living in a place: Worked outside place of residence
+        AHZJE015:    Female: Not living in a place
+ 
+    Table 3:     Aggregate Travel Time to Work (in Minutes) of Workers by Means of Transportation to Work
+    Universe:    Workers 16 years and over who did not work at home
+    Source code: B08136
+    NHGIS code:  AHZQ
+        AHZQE001:    Aggregate travel time to work (in minutes)
+        AHZQE002:    Aggregate travel time to work (in minutes): Car, truck, or van
+        AHZQE003:    Aggregate travel time to work (in minutes): Car, truck, or van: Drove alone
+        AHZQE004:    Aggregate travel time to work (in minutes): Car, truck, or van: Carpooled
+        AHZQE005:    Aggregate travel time to work (in minutes): Car, truck, or van: Carpooled: In 2-person carpool
+        AHZQE006:    Aggregate travel time to work (in minutes): Car, truck, or van: Carpooled: In 3-or-more-person carpool
+        AHZQE007:    Aggregate travel time to work (in minutes): Public transportation (excluding taxicab)
+        AHZQE008:    Aggregate travel time to work (in minutes): Public transportation (excluding taxicab): Bus or trolley bus
+        AHZQE009:    Aggregate travel time to work (in minutes): Public transportation (excluding taxicab): Streetcar or trolley car (carro publico in Puerto Rico), subway or elevated
+        AHZQE010:    Aggregate travel time to work (in minutes): Public transportation (excluding taxicab): Railroad or ferryboat
+        AHZQE011:    Aggregate travel time to work (in minutes): Walked
+        AHZQE012:    Aggregate travel time to work (in minutes): Taxicab, motorcycle, bicycle, or other means
+ 
+    Table 4:     Means of Transportation to Work
+    Universe:    Workers 16 years and over
+    Source code: B08301
+    NHGIS code:  AHZR
+        AHZRE001:    Total
+        AHZRE002:    Car, truck, or van
+        AHZRE003:    Car, truck, or van: Drove alone
+        AHZRE004:    Car, truck, or van: Carpooled
+        AHZRE005:    Car, truck, or van: Carpooled: In 2-person carpool
+        AHZRE006:    Car, truck, or van: Carpooled: In 3-person carpool
+        AHZRE007:    Car, truck, or van: Carpooled: In 4-person carpool
+        AHZRE008:    Car, truck, or van: Carpooled: In 5- or 6-person carpool
+        AHZRE009:    Car, truck, or van: Carpooled: In 7-or-more-person carpool
+        AHZRE010:    Public transportation (excluding taxicab)
+        AHZRE011:    Public transportation (excluding taxicab): Bus or trolley bus
+        AHZRE012:    Public transportation (excluding taxicab): Streetcar or trolley car (carro publico in Puerto Rico)
+        AHZRE013:    Public transportation (excluding taxicab): Subway or elevated
+        AHZRE014:    Public transportation (excluding taxicab): Railroad
+        AHZRE015:    Public transportation (excluding taxicab): Ferryboat
+        AHZRE016:    Taxicab
+        AHZRE017:    Motorcycle
+        AHZRE018:    Bicycle
+        AHZRE019:    Walked
+        AHZRE020:    Other means
+        AHZRE021:    Worked at home
+ 
+    Table 5:     Time Leaving Home to Go to Work
+    Universe:    Workers 16 years and over who did not work at home
+    Source code: B08302
+    NHGIS code:  AHZS
+        AHZSE001:    Total
+        AHZSE002:    12:00 a.m. to 4:59 a.m.
+        AHZSE003:    5:00 a.m. to 5:29 a.m.
+        AHZSE004:    5:30 a.m. to 5:59 a.m.
+        AHZSE005:    6:00 a.m. to 6:29 a.m.
+        AHZSE006:    6:30 a.m. to 6:59 a.m.
+        AHZSE007:    7:00 a.m. to 7:29 a.m.
+        AHZSE008:    7:30 a.m. to 7:59 a.m.
+        AHZSE009:    8:00 a.m. to 8:29 a.m.
+        AHZSE010:    8:30 a.m. to 8:59 a.m.
+        AHZSE011:    9:00 a.m. to 9:59 a.m.
+        AHZSE012:    10:00 a.m. to 10:59 a.m.
+        AHZSE013:    11:00 a.m. to 11:59 a.m.
+        AHZSE014:    12:00 p.m. to 3:59 p.m.
+        AHZSE015:    4:00 p.m. to 11:59 p.m.
+ 
+    Table 6:     Travel Time to Work
+    Universe:    Workers 16 years and over who did not work at home
+    Source code: B08303
+    NHGIS code:  AHZT
+        AHZTE001:    Total
+        AHZTE002:    Less than 5 minutes
+        AHZTE003:    5 to 9 minutes
+        AHZTE004:    10 to 14 minutes
+        AHZTE005:    15 to 19 minutes
+        AHZTE006:    20 to 24 minutes
+        AHZTE007:    25 to 29 minutes
+        AHZTE008:    30 to 34 minutes
+        AHZTE009:    35 to 39 minutes
+        AHZTE010:    40 to 44 minutes
+        AHZTE011:    45 to 59 minutes
+        AHZTE012:    60 to 89 minutes
+        AHZTE013:    90 or more minutes
+ 
+    Table 7:     Median Household Income in the Past 12 Months (in 2017 Inflation-Adjusted Dollars)
+    Universe:    Households
+    Source code: B19013
+    NHGIS code:  AH1P
+        AH1PE001:    Median household income in the past 12 months (in 2017 inflation-adjusted dollars)
+ 
+    Table 8:     Employment Status for the Population 16 Years and Over
+    Universe:    Population 16 years and over
+    Source code: B23025
+    NHGIS code:  AH3P
+        AH3PE001:    Total
+        AH3PE002:    In labor force
+        AH3PE003:    In labor force: Civilian labor force
+        AH3PE004:    In labor force: Civilian labor force: Employed
+        AH3PE005:    In labor force: Civilian labor force: Unemployed
+        AH3PE006:    In labor force: Armed Forces
+        AH3PE007:    Not in labor force
+ 
+    Table 9:     Sex by Industry for the Civilian Employed Population 16 Years and Over
+    Universe:    Civilian employed population 16 years and over
+    Source code: C24030
+    NHGIS code:  AH33
+        AH33E001:    Total
+        AH33E002:    Male
+        AH33E003:    Male: Agriculture, forestry, fishing and hunting, and mining
+        AH33E004:    Male: Agriculture, forestry, fishing and hunting, and mining: Agriculture, forestry, fishing and hunting
+        AH33E005:    Male: Agriculture, forestry, fishing and hunting, and mining: Mining, quarrying, and oil and gas extraction
+        AH33E006:    Male: Construction
+        AH33E007:    Male: Manufacturing
+        AH33E008:    Male: Wholesale trade
+        AH33E009:    Male: Retail trade
+        AH33E010:    Male: Transportation and warehousing, and utilities
+        AH33E011:    Male: Transportation and warehousing, and utilities: Transportation and warehousing
+        AH33E012:    Male: Transportation and warehousing, and utilities: Utilities
+        AH33E013:    Male: Information
+        AH33E014:    Male: Finance and insurance, and real estate and rental and leasing
+        AH33E015:    Male: Finance and insurance, and real estate and rental and leasing: Finance and insurance
+        AH33E016:    Male: Finance and insurance, and real estate and rental and leasing: Real estate and rental and leasing
+        AH33E017:    Male: Professional, scientific, and management, and administrative and waste management services
+        AH33E018:    Male: Professional, scientific, and management, and administrative and waste management services: Professional, scientific, and technical services
+        AH33E019:    Male: Professional, scientific, and management, and administrative and waste management services: Management of companies and enterprises
+        AH33E020:    Male: Professional, scientific, and management, and administrative and waste management services: Administrative and support and waste management services
+        AH33E021:    Male: Educational services, and health care and social assistance
+        AH33E022:    Male: Educational services, and health care and social assistance: Educational services
+        AH33E023:    Male: Educational services, and health care and social assistance: Health care and social assistance
+        AH33E024:    Male: Arts, entertainment, and recreation, and accommodation and food services
+        AH33E025:    Male: Arts, entertainment, and recreation, and accommodation and food services: Arts, entertainment, and recreation
+        AH33E026:    Male: Arts, entertainment, and recreation, and accommodation and food services: Accommodation and food services
+        AH33E027:    Male: Other services, except public administration
+        AH33E028:    Male: Public administration
+        AH33E029:    Female
+        AH33E030:    Female: Agriculture, forestry, fishing and hunting, and mining
+        AH33E031:    Female: Agriculture, forestry, fishing and hunting, and mining: Agriculture, forestry, fishing and hunting
+        AH33E032:    Female: Agriculture, forestry, fishing and hunting, and mining: Mining, quarrying, and oil and gas extraction
+        AH33E033:    Female: Construction
+        AH33E034:    Female: Manufacturing
+        AH33E035:    Female: Wholesale trade
+        AH33E036:    Female: Retail trade
+        AH33E037:    Female: Transportation and warehousing, and utilities
+        AH33E038:    Female: Transportation and warehousing, and utilities: Transportation and warehousing
+        AH33E039:    Female: Transportation and warehousing, and utilities: Utilities
+        AH33E040:    Female: Information
+        AH33E041:    Female: Finance and insurance, and real estate and rental and leasing
+        AH33E042:    Female: Finance and insurance, and real estate and rental and leasing: Finance and insurance
+        AH33E043:    Female: Finance and insurance, and real estate and rental and leasing: Real estate and rental and leasing
+        AH33E044:    Female: Professional, scientific, and management, and administrative and waste management services
+        AH33E045:    Female: Professional, scientific, and management, and administrative and waste management services: Professional, scientific, and technical services
+        AH33E046:    Female: Professional, scientific, and management, and administrative and waste management services: Management of companies and enterprises
+        AH33E047:    Female: Professional, scientific, and management, and administrative and waste management services: Administrative and support and waste management services
+        AH33E048:    Female: Educational services, and health care and social assistance
+        AH33E049:    Female: Educational services, and health care and social assistance: Educational services
+        AH33E050:    Female: Educational services, and health care and social assistance: Health care and social assistance
+        AH33E051:    Female: Arts, entertainment, and recreation, and accommodation and food services
+        AH33E052:    Female: Arts, entertainment, and recreation, and accommodation and food services: Arts, entertainment, and recreation
+        AH33E053:    Female: Arts, entertainment, and recreation, and accommodation and food services: Accommodation and food services
+        AH33E054:    Female: Other services, except public administration
+        AH33E055:    Female: Public administration
+ 
+    Table 10:    Occupancy Status
+    Universe:    Housing units
+    Source code: B25002
+    NHGIS code:  AH36
+        AH36E001:    Total
+        AH36E002:    Occupied
+        AH36E003:    Vacant
+ 
+    Table 11:    Aggregate Number of Vehicles Available by Tenure
+    Universe:    Occupied housing units
+    Source code: B25046
+    NHGIS code:  AH5B
+        AH5BE001:    Aggregate number of vehicles available
+        AH5BE002:    Aggregate number of vehicles available: Owner occupied
+        AH5BE003:    Aggregate number of vehicles available: Renter occupied
+ 
+Data Type (M):
+    Margins of error
+ 
+        NAME_M:      Area Name
+ 
+    Table 1:     Total Population
+    Universe:    Total population
+    Source code: B01003
+    NHGIS code:  AHY1
+        AHY1M001:    Total
+ 
+    Table 2:     Sex of Workers by Place of Work--Place Level
+    Universe:    Workers 16 years and over
+    Source code: B08008
+    NHGIS code:  AHZJ
+        AHZJM001:    Total
+        AHZJM002:    Living in a place
+        AHZJM003:    Living in a place: Worked in place of residence
+        AHZJM004:    Living in a place: Worked outside place of residence
+        AHZJM005:    Not living in a place
+        AHZJM006:    Male
+        AHZJM007:    Male: Living in a place
+        AHZJM008:    Male: Living in a place: Worked in place of residence
+        AHZJM009:    Male: Living in a place: Worked outside place of residence
+        AHZJM010:    Male: Not living in a place
+        AHZJM011:    Female
+        AHZJM012:    Female: Living in a place
+        AHZJM013:    Female: Living in a place: Worked in place of residence
+        AHZJM014:    Female: Living in a place: Worked outside place of residence
+        AHZJM015:    Female: Not living in a place
+ 
+    Table 3:     Aggregate Travel Time to Work (in Minutes) of Workers by Means of Transportation to Work
+    Universe:    Workers 16 years and over who did not work at home
+    Source code: B08136
+    NHGIS code:  AHZQ
+        AHZQM001:    Aggregate travel time to work (in minutes)
+        AHZQM002:    Aggregate travel time to work (in minutes): Car, truck, or van
+        AHZQM003:    Aggregate travel time to work (in minutes): Car, truck, or van: Drove alone
+        AHZQM004:    Aggregate travel time to work (in minutes): Car, truck, or van: Carpooled
+        AHZQM005:    Aggregate travel time to work (in minutes): Car, truck, or van: Carpooled: In 2-person carpool
+        AHZQM006:    Aggregate travel time to work (in minutes): Car, truck, or van: Carpooled: In 3-or-more-person carpool
+        AHZQM007:    Aggregate travel time to work (in minutes): Public transportation (excluding taxicab)
+        AHZQM008:    Aggregate travel time to work (in minutes): Public transportation (excluding taxicab): Bus or trolley bus
+        AHZQM009:    Aggregate travel time to work (in minutes): Public transportation (excluding taxicab): Streetcar or trolley car (carro publico in Puerto Rico), subway or elevated
+        AHZQM010:    Aggregate travel time to work (in minutes): Public transportation (excluding taxicab): Railroad or ferryboat
+        AHZQM011:    Aggregate travel time to work (in minutes): Walked
+        AHZQM012:    Aggregate travel time to work (in minutes): Taxicab, motorcycle, bicycle, or other means
+ 
+    Table 4:     Means of Transportation to Work
+    Universe:    Workers 16 years and over
+    Source code: B08301
+    NHGIS code:  AHZR
+        AHZRM001:    Total
+        AHZRM002:    Car, truck, or van
+        AHZRM003:    Car, truck, or van: Drove alone
+        AHZRM004:    Car, truck, or van: Carpooled
+        AHZRM005:    Car, truck, or van: Carpooled: In 2-person carpool
+        AHZRM006:    Car, truck, or van: Carpooled: In 3-person carpool
+        AHZRM007:    Car, truck, or van: Carpooled: In 4-person carpool
+        AHZRM008:    Car, truck, or van: Carpooled: In 5- or 6-person carpool
+        AHZRM009:    Car, truck, or van: Carpooled: In 7-or-more-person carpool
+        AHZRM010:    Public transportation (excluding taxicab)
+        AHZRM011:    Public transportation (excluding taxicab): Bus or trolley bus
+        AHZRM012:    Public transportation (excluding taxicab): Streetcar or trolley car (carro publico in Puerto Rico)
+        AHZRM013:    Public transportation (excluding taxicab): Subway or elevated
+        AHZRM014:    Public transportation (excluding taxicab): Railroad
+        AHZRM015:    Public transportation (excluding taxicab): Ferryboat
+        AHZRM016:    Taxicab
+        AHZRM017:    Motorcycle
+        AHZRM018:    Bicycle
+        AHZRM019:    Walked
+        AHZRM020:    Other means
+        AHZRM021:    Worked at home
+ 
+    Table 5:     Time Leaving Home to Go to Work
+    Universe:    Workers 16 years and over who did not work at home
+    Source code: B08302
+    NHGIS code:  AHZS
+        AHZSM001:    Total
+        AHZSM002:    12:00 a.m. to 4:59 a.m.
+        AHZSM003:    5:00 a.m. to 5:29 a.m.
+        AHZSM004:    5:30 a.m. to 5:59 a.m.
+        AHZSM005:    6:00 a.m. to 6:29 a.m.
+        AHZSM006:    6:30 a.m. to 6:59 a.m.
+        AHZSM007:    7:00 a.m. to 7:29 a.m.
+        AHZSM008:    7:30 a.m. to 7:59 a.m.
+        AHZSM009:    8:00 a.m. to 8:29 a.m.
+        AHZSM010:    8:30 a.m. to 8:59 a.m.
+        AHZSM011:    9:00 a.m. to 9:59 a.m.
+        AHZSM012:    10:00 a.m. to 10:59 a.m.
+        AHZSM013:    11:00 a.m. to 11:59 a.m.
+        AHZSM014:    12:00 p.m. to 3:59 p.m.
+        AHZSM015:    4:00 p.m. to 11:59 p.m.
+ 
+    Table 6:     Travel Time to Work
+    Universe:    Workers 16 years and over who did not work at home
+    Source code: B08303
+    NHGIS code:  AHZT
+        AHZTM001:    Total
+        AHZTM002:    Less than 5 minutes
+        AHZTM003:    5 to 9 minutes
+        AHZTM004:    10 to 14 minutes
+        AHZTM005:    15 to 19 minutes
+        AHZTM006:    20 to 24 minutes
+        AHZTM007:    25 to 29 minutes
+        AHZTM008:    30 to 34 minutes
+        AHZTM009:    35 to 39 minutes
+        AHZTM010:    40 to 44 minutes
+        AHZTM011:    45 to 59 minutes
+        AHZTM012:    60 to 89 minutes
+        AHZTM013:    90 or more minutes
+ 
+    Table 7:     Median Household Income in the Past 12 Months (in 2017 Inflation-Adjusted Dollars)
+    Universe:    Households
+    Source code: B19013
+    NHGIS code:  AH1P
+        AH1PM001:    Median household income in the past 12 months (in 2017 inflation-adjusted dollars)
+ 
+    Table 8:     Employment Status for the Population 16 Years and Over
+    Universe:    Population 16 years and over
+    Source code: B23025
+    NHGIS code:  AH3P
+        AH3PM001:    Total
+        AH3PM002:    In labor force
+        AH3PM003:    In labor force: Civilian labor force
+        AH3PM004:    In labor force: Civilian labor force: Employed
+        AH3PM005:    In labor force: Civilian labor force: Unemployed
+        AH3PM006:    In labor force: Armed Forces
+        AH3PM007:    Not in labor force
+ 
+    Table 9:     Sex by Industry for the Civilian Employed Population 16 Years and Over
+    Universe:    Civilian employed population 16 years and over
+    Source code: C24030
+    NHGIS code:  AH33
+        AH33M001:    Total
+        AH33M002:    Male
+        AH33M003:    Male: Agriculture, forestry, fishing and hunting, and mining
+        AH33M004:    Male: Agriculture, forestry, fishing and hunting, and mining: Agriculture, forestry, fishing and hunting
+        AH33M005:    Male: Agriculture, forestry, fishing and hunting, and mining: Mining, quarrying, and oil and gas extraction
+        AH33M006:    Male: Construction
+        AH33M007:    Male: Manufacturing
+        AH33M008:    Male: Wholesale trade
+        AH33M009:    Male: Retail trade
+        AH33M010:    Male: Transportation and warehousing, and utilities
+        AH33M011:    Male: Transportation and warehousing, and utilities: Transportation and warehousing
+        AH33M012:    Male: Transportation and warehousing, and utilities: Utilities
+        AH33M013:    Male: Information
+        AH33M014:    Male: Finance and insurance, and real estate and rental and leasing
+        AH33M015:    Male: Finance and insurance, and real estate and rental and leasing: Finance and insurance
+        AH33M016:    Male: Finance and insurance, and real estate and rental and leasing: Real estate and rental and leasing
+        AH33M017:    Male: Professional, scientific, and management, and administrative and waste management services
+        AH33M018:    Male: Professional, scientific, and management, and administrative and waste management services: Professional, scientific, and technical services
+        AH33M019:    Male: Professional, scientific, and management, and administrative and waste management services: Management of companies and enterprises
+        AH33M020:    Male: Professional, scientific, and management, and administrative and waste management services: Administrative and support and waste management services
+        AH33M021:    Male: Educational services, and health care and social assistance
+        AH33M022:    Male: Educational services, and health care and social assistance: Educational services
+        AH33M023:    Male: Educational services, and health care and social assistance: Health care and social assistance
+        AH33M024:    Male: Arts, entertainment, and recreation, and accommodation and food services
+        AH33M025:    Male: Arts, entertainment, and recreation, and accommodation and food services: Arts, entertainment, and recreation
+        AH33M026:    Male: Arts, entertainment, and recreation, and accommodation and food services: Accommodation and food services
+        AH33M027:    Male: Other services, except public administration
+        AH33M028:    Male: Public administration
+        AH33M029:    Female
+        AH33M030:    Female: Agriculture, forestry, fishing and hunting, and mining
+        AH33M031:    Female: Agriculture, forestry, fishing and hunting, and mining: Agriculture, forestry, fishing and hunting
+        AH33M032:    Female: Agriculture, forestry, fishing and hunting, and mining: Mining, quarrying, and oil and gas extraction
+        AH33M033:    Female: Construction
+        AH33M034:    Female: Manufacturing
+        AH33M035:    Female: Wholesale trade
+        AH33M036:    Female: Retail trade
+        AH33M037:    Female: Transportation and warehousing, and utilities
+        AH33M038:    Female: Transportation and warehousing, and utilities: Transportation and warehousing
+        AH33M039:    Female: Transportation and warehousing, and utilities: Utilities
+        AH33M040:    Female: Information
+        AH33M041:    Female: Finance and insurance, and real estate and rental and leasing
+        AH33M042:    Female: Finance and insurance, and real estate and rental and leasing: Finance and insurance
+        AH33M043:    Female: Finance and insurance, and real estate and rental and leasing: Real estate and rental and leasing
+        AH33M044:    Female: Professional, scientific, and management, and administrative and waste management services
+        AH33M045:    Female: Professional, scientific, and management, and administrative and waste management services: Professional, scientific, and technical services
+        AH33M046:    Female: Professional, scientific, and management, and administrative and waste management services: Management of companies and enterprises
+        AH33M047:    Female: Professional, scientific, and management, and administrative and waste management services: Administrative and support and waste management services
+        AH33M048:    Female: Educational services, and health care and social assistance
+        AH33M049:    Female: Educational services, and health care and social assistance: Educational services
+        AH33M050:    Female: Educational services, and health care and social assistance: Health care and social assistance
+        AH33M051:    Female: Arts, entertainment, and recreation, and accommodation and food services
+        AH33M052:    Female: Arts, entertainment, and recreation, and accommodation and food services: Arts, entertainment, and recreation
+        AH33M053:    Female: Arts, entertainment, and recreation, and accommodation and food services: Accommodation and food services
+        AH33M054:    Female: Other services, except public administration
+        AH33M055:    Female: Public administration
+ 
+    Table 10:    Occupancy Status
+    Universe:    Housing units
+    Source code: B25002
+    NHGIS code:  AH36
+        AH36M001:    Total
+        AH36M002:    Occupied
+        AH36M003:    Vacant
+ 
+    Table 11:    Aggregate Number of Vehicles Available by Tenure
+    Universe:    Occupied housing units
+    Source code: B25046
+    NHGIS code:  AH5B
+        AH5BM001:    Aggregate number of vehicles available
+        AH5BM002:    Aggregate number of vehicles available: Owner occupied
+        AH5BM003:    Aggregate number of vehicles available: Renter occupied
+ 
+--------------------------------------------------------------------------------
+Citation and Use of NHGIS Data
+--------------------------------------------------------------------------------
+ 
+All persons are granted a limited license to use this documentation and the
+accompanying data, subject to the following conditions:
+
+* REDISTRIBUTION: You will not redistribute the data without permission.
+
+  You may publish a subset of the data to meet journal requirements for accessing 
+  data related to a particular publication. Contact us for permission for any other 
+  redistribution; we will consider requests for free and commercial redistribution.
+
+* CITATION: You will cite NHGIS appropriately.
+
+    * Publications and research reports employing NHGIS data (either tabular or GIS) 
+      should include the following citation:
+
+        Steven Manson, Jonathan Schroeder, David Van Riper, and Steven Ruggles. 
+        IPUMS National Historical Geographic Information System: Version 14.0 
+        [Database]. Minneapolis, MN: IPUMS. 2019. 
+        http://doi.org/10.18128/D050.V14.0
+
+    * Publications and research reports employing school attendance areas data 
+      (either tabular or GIS) must cite it appropriately. The citation should 
+      include the following:
+
+        The College of William and Mary and the Minnesota Population Center.
+        School Attendance Boundary Information System (SABINS): Version 1.0.
+        Minneapolis, MN: University of Minnesota 2011.
+
+    * For policy briefs, online resources, or articles in the popular press, we 
+      recommend that you cite the use of NHGIS data as follows:
+
+        IPUMS NHGIS, University of Minnesota, www.nhgis.org.
+
+    * If possible, citations involving school attendance areas should also include
+      the URL for the SABINS site:
+
+        http://www.sabinsdata.org/.
+
+These terms of use are a legally binding agreement. You can use the data only in 
+accordance with these terms, and any other use is a violation of the agreement. 
+Violations may result in revocation of the agreement and prohibition from using other 
+IPUMS data. If IPUMS or our partners are harmed from your violation, you are 
+responsible for all damages, including reasonable attorney's fees and expenses.
+        
+In addition, we request that users send us a copy of any publications, research
+reports, or educational material making use of the data or documentation.
+
+Send electronic material to: nhgis@umn.edu
+
+Printed matter should be sent to:
+
+    IPUMS NHGIS
+    Institute for Social Research and Data Innovation
+    University of Minnesota
+    50 Willey Hall
+    225 19th Ave S
+    Minneapolis, MN 55455
