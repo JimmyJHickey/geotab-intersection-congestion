@@ -12,6 +12,7 @@ library(sp)
 library(tictoc)
 library(tigris)
 library(Hmisc)
+library(dplyr)
 
 
 
@@ -306,6 +307,40 @@ train_append_census_plan <- drake_plan(
 
 
 
+# normalize census variables accordingly:
+# for counts of people/housing units, I divide by LandArea to get population/housing densities. 
+# Accordingly, these variables will have "Density" appended to their names, instead of "Raw"
+
+normalize_census <- function(train_append_census) {
+  
+  LandArea <- train_append_census$LandArea
+  
+  raw_var <- select(train_append_census, ends_with("Raw"))
+  
+  raw_var_names <- names(raw_var)
+  
+  train_normalize_census <- train_append_census
+  
+  for (j in 1:dim(raw_var)[2]) {
+    
+    train_normalize_census <- mutate(train_normalize_census, new_density_var = raw_var[,j] / LandArea)
+    
+    names(train_normalize_census)[names(train_normalize_census) == "new_density_var"] <- paste0(sub("Raw", "", raw_var_names[j]), "Density")
+    
+  }
+  
+  return(train_normalize_census)
+  
+}
+
+
+
+train_normalize_census_plan <- drake_plan(
+  
+  train_normalize_census = normalize_census(train_append_census)
+  
+)
+
 
 
 
@@ -320,7 +355,8 @@ merge_census <- rbind(
   drake_plan(
     train_append_GeoID = rbind.data.frame(train_Atlanta3, train_Boston3, train_Chicago3, train_Philadelphia3)
   ),
-  train_append_census_plan
+  train_append_census_plan, 
+  train_normalize_census_plan
 )
 
 
@@ -339,6 +375,11 @@ make(merge_census)
 history <- drake_history(analyze = TRUE)
 
 cache <- drake_cache()
+
+
+loadd(train_normalize_census)
+
+save(train_normalize_census, file = "backup_data_files/train_normalize_census.RData")
 
 
 
