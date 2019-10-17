@@ -88,28 +88,21 @@ my_append_geoid <- function(train_city, state_boundary_file) {
 
 my_append_geoid2 <- function(train_city) {
   
-  if (train_city$City[1] != "Philadelphia") {
+  long_lat <- paste(train_city$Latitude, train_city$Longitude) # better identifier of the intersection than IntersectionID
+  
+  long_lat_missing_geoid <- unique(long_lat[which(is.na(train_city$GeoID))])
+  
+  for (ll in long_lat_missing_geoid) {
     
-    missing_geoid <- which(is.na(train_city$GeoID))
+    # splitting on space
+    lat <- as.numeric(strsplit(ll, " ")[[1]][1])
+    lon <- as.numeric(strsplit(ll, " ")[[1]][2]) 
     
-    for (row_i in missing_geoid) {
-      
-      lat <- train_city[row_i,]$Latitude
-      lon <- train_city[row_i,]$Longitude
-      
-      GeoID_append <- append_geoid(data.frame("lat" = lat, "lon" = lon), "block group")[3]
-      
-      train_city$GeoID[row_i] <- as.numeric(GeoID_append)
-      
-    } 
+    GeoID_append <- append_geoid(data.frame("lat" = lat, "lon" = lon), "block group")[3]
     
-  } else if (train_city$City[1] == "Philadelphia") {
+    train_city$GeoID[long_lat == ll] <- as.numeric(GeoID_append)
     
-    # For some reason, the above code takes way too long for train_Philadelphia.
-    # thus, I hard-code the missing GeoID. As it turns out, there's only one missing GeoID for Philadelphia
-    train_city[is.na(train_city$GeoID),]$GeoID = 421010118004
-    
-  }
+  } 
   
   return(train_city)
   
