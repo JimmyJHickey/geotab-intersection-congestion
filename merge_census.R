@@ -165,6 +165,55 @@ train_Philadelphia_append_GeoID <- drake_plan(
 
 
 
+
+
+### Atlanta ###
+
+test_Atlanta_append_GeoID <- drake_plan(
+  # Extract Atlanta intersections
+  test_Atlanta = test[test$City == "Atlanta",],
+  # append the GeoID to test_Atlanta
+  test_Atlanta1 = my_append_geoid(test_Atlanta, GA_boundary_file),
+  test_Atlanta2 = my_append_geoid2(test_Atlanta1)
+)
+
+
+### Boston ###
+
+test_Boston_append_GeoID <- drake_plan(
+  # Extract Boston intersections
+  test_Boston = test[test$City == "Boston",],
+  # append the GeoID to test_Boston
+  test_Boston1 = my_append_geoid(test_Boston, MA_boundary_file),
+  test_Boston2 = my_append_geoid2(test_Boston1)
+)
+
+
+
+### Chicago ###
+
+test_Chicago_append_GeoID <- drake_plan(
+  # Extract Chicago intersections
+  test_Chicago = test[test$City == "Chicago",],
+  # append the GeoID to test_Chicago
+  test_Chicago1 = my_append_geoid(test_Chicago, IL_boundary_file),
+  test_Chicago2 = my_append_geoid2(test_Chicago1)
+)
+
+
+
+### Philadelphia ###
+
+test_Philadelphia_append_GeoID <- drake_plan(
+  # Extract Philadelphia intersections
+  test_Philadelphia = test[test$City == "Philadelphia",],
+  # append the GeoID to test_Philadelphia
+  test_Philadelphia1 = my_append_geoid(test_Philadelphia, PA_boundary_file),
+  test_Philadelphia2 = my_append_geoid2(test_Philadelphia1)
+)
+
+
+
 #### Merging Land Area of each block group ####
 
 merge_land_area <- function(train_city, state_boundary_file) {
@@ -191,6 +240,16 @@ train_city_append_LandArea <- drake_plan(
   train_Boston3 = merge_land_area(train_Boston2, MA_boundary_file),
   train_Chicago3 = merge_land_area(train_Chicago2, IL_boundary_file),
   train_Philadelphia3 = merge_land_area(train_Philadelphia2, PA_boundary_file)
+)
+
+
+
+# append LandArea to each test_city
+test_city_append_LandArea <- drake_plan(
+  test_Atlanta3 = merge_land_area(test_Atlanta2, GA_boundary_file),
+  test_Boston3 = merge_land_area(test_Boston2, MA_boundary_file),
+  test_Chicago3 = merge_land_area(test_Chicago2, IL_boundary_file),
+  test_Philadelphia3 = merge_land_area(test_Philadelphia2, PA_boundary_file)
 )
 
 
@@ -300,6 +359,14 @@ train_append_census_plan <- drake_plan(
 
 
 
+# append census data to test
+test_append_census_plan <- drake_plan(
+  # variables 1-37 are geographic identifiers, variables 54-65 have too many NAs, and variables 184-330 are the margins of error
+  test_append_census = merge_acs(test_append_GeoID, acs_file, old_var_names, new_var_names)
+)
+
+
+
 # normalize census variables accordingly:
 # for counts of people/housing units, I divide by LandArea to get population/housing densities. 
 # Accordingly, these variables will have "Density" appended to their names, instead of "Raw"
@@ -327,10 +394,19 @@ normalize_census <- function(train_append_census) {
 }
 
 
-
+# normalize the census variables and append it to train
 train_normalize_census_plan <- drake_plan(
   
   train_normalize_census = normalize_census(train_append_census)
+  
+)
+
+
+
+# normalize the census variables and append it to test
+test_normalize_census_plan <- drake_plan(
+  
+  test_normalize_census = normalize_census(test_append_census)
   
 )
 
@@ -349,7 +425,18 @@ merge_census <- rbind(
     train_append_GeoID = rbind.data.frame(train_Atlanta3, train_Boston3, train_Chicago3, train_Philadelphia3)
   ),
   train_append_census_plan, 
-  train_normalize_census_plan
+  train_normalize_census_plan,
+  # repeating everything for the test set
+  test_Atlanta_append_GeoID,
+  test_Boston_append_GeoID,
+  test_Chicago_append_GeoID,
+  test_Philadelphia_append_GeoID,
+  test_city_append_LandArea,
+  drake_plan(
+    test_append_GeoID = rbind.data.frame(test_Atlanta3, test_Boston3, test_Chicago3, test_Philadelphia3)
+  ),
+  test_append_census_plan, 
+  test_normalize_census_plan
 )
 
 
@@ -370,13 +457,31 @@ history <- drake_history(analyze = TRUE)
 cache <- drake_cache()
 
 
+
+# save final data in convenient rds/RData
+
 loadd(train_normalize_census)
 
 save(train_normalize_census, file = "backup_data_files/train_normalize_census.RData")
 
 write.csv(train_normalize_census, file = "backup_data_files/train_normalize_census.csv")
 
-# save final data in convenient rds/RData
+
+
+loadd(test_normalize_census)
+
+save(test_normalize_census, file = "backup_data_files/test_normalize_census.RData")
+
+write.csv(test_normalize_census, file = "backup_data_files/test_normalize_census.csv")
+
+
+
+
+
+
+
+
+
 
 
 
