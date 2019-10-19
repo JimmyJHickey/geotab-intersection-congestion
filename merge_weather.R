@@ -4,13 +4,13 @@ library(drake)
 library(dplyr)
 
 # load dependencies
-loadd(train_Atlanta)
-loadd(train_Boston)
-loadd(train_Chicago)
-loadd(train_Philadelphia)
+train_Atlanta <- readd(train_Atlanta)
+train_Boston <- readd(train_Boston)
+train_Chicago <- readd(train_Chicago)
+train_Philadelphia <- readd(train_Philadelphia)
 
-loadd(train_normalize_census)
-loadd(test_normalize_census)
+train_normalize_census <- readd(train_normalize_census)
+test_normalize_census <- readd(test_normalize_census)
 
 # returns the station id of the weather station closest to the intersections in the city
 
@@ -21,6 +21,11 @@ closest_weather_station <- function(city_dat, network) {
   
   city_stations <- riem_stations(network = network)
   
+  if (city_dat$City[1] == "Chicago") {
+    # this weather station doesn't have any up-to-date data
+    city_stations <- city_stations[city_stations$id != "CGX",]
+  }
+  
   distances <- sqrt((city_stations$lat - med_lat)^2 + (city_stations$lon - med_lon)^2)
   
   station_id <- city_stations$id[which.min(distances)]
@@ -28,8 +33,6 @@ closest_weather_station <- function(city_dat, network) {
 }
 
 
-
-# res <- riem_measures("ORD", date_start = "2018-06-01")
 
 merge_weather_plan <- drake_plan(
 
