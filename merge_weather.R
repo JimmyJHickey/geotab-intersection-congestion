@@ -218,3 +218,23 @@ cache <- drake_cache()
 
 
 
+# save final data in convenient rds/RData
+
+loadd(train_append_weather)
+
+save(train_append_weather, file = "backup_data_files/train_append_weather.RData")
+
+write.csv(train_append_weather, file = "backup_data_files/train_append_weather.csv")
+
+
+
+loadd(test_append_weather)
+
+save(test_append_weather, file = "backup_data_files/test_append_weather.RData")
+
+write.csv(test_append_weather, file = "backup_data_files/test_append_weather.csv")
+
+
+
+
+
