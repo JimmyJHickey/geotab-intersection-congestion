@@ -97,8 +97,10 @@ weather_aggregate <- function(weather_cities, ref_mins) {
     summarise(tmpf = mean(tmpf, na.rm = TRUE), dwpf = mean(dwpf, na.rm = TRUE), relh = mean(relh, na.rm = TRUE),
               drct = mean(drct, na.rm = TRUE), sknt = mean(sknt, na.rm = TRUE), p01i = mean(p01i, na.rm = TRUE),
               alti = mean(alti, na.rm = TRUE), mslp = mean(mslp, na.rm = TRUE), vsby = mean(vsby, na.rm = TRUE),
-              feel = mean(feel, na.rm = TRUE),
-              sskkkkyyyyyy)
+              feel = mean(feel, na.rm = TRUE), skyc1_CLR = mean(skyc1_CLR, na.rm = TRUE), 
+              skyc1_FEW = mean(skyc1_FEW, na.rm = TRUE), skyc1_SCT = mean(skyc1_SCT, na.rm = TRUE),
+              skyc1_BKN = mean(skyc1_BKN, na.rm = TRUE), skyc1_OVC = mean(skyc1_OVC, na.rm = TRUE),
+              skyc1_VV = mean(`skyc1_VV `, na.rm = TRUE))
   
 }
 
@@ -119,15 +121,53 @@ append_weather <- function(dat, weather_cities, station_ids) {
   
   weather_agg <- weather_aggregate(weather_cities, ref_mins)
   
+  # initialize new variables for dataframe, and naming them at the same time
+  num_rows <- dim(dat)[1]
+  
+  dat$Temperature <- rep(NA, num_rows)
+  dat$DewPointTemperature <- rep(NA, num_rows)
+  dat$Humidity <- rep(NA, num_rows)
+  dat$WindDirection <- rep(NA, num_rows)
+  dat$WindSpeed <- rep(NA, num_rows)
+  dat$Precipitation <- rep(NA, num_rows)
+  dat$PressureAltitude <- rep(NA, num_rows)
+  dat$SeaLevelPressure <- rep(NA, num_rows)
+  dat$Visibility <- rep(NA, num_rows)
+  dat$FeelsLikeTemperature <- rep(NA, num_rows)
+  dat$SkyClear <- rep(NA, num_rows)
+  dat$SkyFew <- rep(NA, num_rows)
+  dat$SkyScattered <- rep(NA, num_rows)
+  dat$SkyBroken <- rep(NA, num_rows)
+  dat$SkyOvercast <- rep(NA, num_rows) 
+  dat$SkyVV <- rep(NA, num_rows) # I'm actually not sure what VV stands for
+  
   for (hmc in hour_month_city_unique) {
     
     hour <- as.integer(strsplit(hmc, " ")[[1]][1])
     month <- as.integer(strsplit(hmc, " ")[[1]][2])
     city <- strsplit(hmc, " ")[[1]][3]
     
-    # weather_city <- weather_cities[[which(names(weather_cities) == city)]]
+    station <- station_ids[[which(names(station_ids) == city)]]
     
+    weather_hmc <- weather_agg[weather_agg$Hour == hour & weather_agg$Month == month &
+                                 weather_agg$station == station,]
     
+    dat$Temperature[hour_month_city == hmc] <- weather_hmc$tmpf
+    dat$DewPointTemperature[hour_month_city == hmc] <- weather_hmc$dwpf
+    dat$Humidity[hour_month_city == hmc] <- weather_hmc$relh
+    dat$WindDirection[hour_month_city == hmc] <- weather_hmc$drct
+    dat$WindSpeed[hour_month_city == hmc] <- weather_hmc$sknt
+    dat$Precipitation[hour_month_city == hmc] <- weather_hmc$p01i
+    dat$PressureAltitude[hour_month_city == hmc] <- weather_hmc$alti
+    dat$SeaLevelPressure[hour_month_city == hmc] <- weather_hmc$mslp
+    dat$Visibility[hour_month_city == hmc] <- weather_hmc$vsby
+    dat$FeelsLikeTemperature[hour_month_city == hmc] <- weather_hmc$feel
+    dat$SkyClear[hour_month_city == hmc] <- weather_hmc$skyc1_CLR
+    dat$SkyFew[hour_month_city == hmc] <- weather_hmc$skyc1_FEW
+    dat$SkyScattered[hour_month_city == hmc] <- weather_hmc$skyc1_SCT
+    dat$SkyBroken[hour_month_city == hmc] <- weather_hmc$skyc1_BKN
+    dat$SkyOvercast[hour_month_city == hmc] <- weather_hmc$skyc1_OVC
+    dat$SkyVV[hour_month_city == hmc] <- weather_hmc$skyc1_VV
     
   }
   
@@ -154,8 +194,11 @@ merge_weather_plan <- drake_plan(
   train_append_weather = append_weather(train_normalize_census, weather_cities = list(Atlanta = weather_Atlanta, Boston = weather_Boston, 
                                                                                       Chicago = weather_Chicago, Philadelphia = weather_Philadelphia),
                                                                 station_ids = list(Atlanta = station_id_Atlanta, Boston = station_id_Boston, 
-                                                                                   Chicago = station_id_Chicago, Philadelphia = station_id_Philadelphia))
-  # test_append_weather = 
+                                                                                   Chicago = station_id_Chicago, Philadelphia = station_id_Philadelphia)),
+  test_append_weather = append_weather(test_normalize_census, weather_cities = list(Atlanta = weather_Atlanta, Boston = weather_Boston, 
+                                                                                     Chicago = weather_Chicago, Philadelphia = weather_Philadelphia),
+                                       station_ids = list(Atlanta = station_id_Atlanta, Boston = station_id_Boston, 
+                                                          Chicago = station_id_Chicago, Philadelphia = station_id_Philadelphia))
   
 )
 
