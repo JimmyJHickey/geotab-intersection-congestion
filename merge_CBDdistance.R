@@ -98,17 +98,24 @@ names(train_Boston_merge_distCBD)[303:305] <- c("lat2", "lon2", "distCBD")
 names(train_Chicago_merge_distCBD)[303:305] <- c("lat2", "lon2", "distCBD")
 names(train_Philadelphia_merge_distCBD)[303:305] <- c("lat2", "lon2", "distCBD")
 
-names(test_Atlanta_merge_distCBD)[303:305] <- c("lat2", "lon2", "distCBD")
-names(test_Boston_merge_distCBD)[303:305] <- c("lat2", "lon2", "distCBD")
-names(test_Chicago_merge_distCBD)[303:305] <- c("lat2", "lon2", "distCBD")
-names(test_Philadelphia_merge_distCBD)[303:305] <- c("lat2", "lon2", "distCBD")
+names(test_Atlanta_merge_distCBD)[288:290] <- c("lat2", "lon2", "distCBD")
+names(test_Boston_merge_distCBD)[288:290] <- c("lat2", "lon2", "distCBD")
+names(test_Chicago_merge_distCBD)[288:290] <- c("lat2", "lon2", "distCBD")
+names(test_Philadelphia_merge_distCBD)[288:290] <- c("lat2", "lon2", "distCBD")
 
 # merge data for 4 cities 
 train_merge_distCBD <- rbind(train_Atlanta_merge_distCBD, train_Boston_merge_distCBD, train_Chicago_merge_distCBD, train_Philadelphia_merge_distCBD)
 test_merge_distCBD <- rbind(test_Atlanta_merge_distCBD, test_Boston_merge_distCBD, test_Chicago_merge_distCBD, test_Philadelphia_merge_distCBD)
 
-# save data as 
-save(train_merge_distCBD, file = "train_merge_distCBD.RData")
+train_merge_distCBD <- train_merge_distCBD[,-c(303:304)] # don't need coordinates of CBD in data set
+test_merge_distCBD <- test_merge_distCBD[,-c(288:289)] # don't need coordinates of CBD in data set
 
-write.csv(train_merge_distCBD, file = "train_merge_distCBD.csv")
+# save data as 
+save(train_merge_distCBD, file = "backup_data_files/train_merge_distCBD.RData")
+
+write.csv(train_merge_distCBD, file = "backup_data_files/train_merge_distCBD.csv")
+
+save(test_merge_distCBD, file = "backup_data_files/test_merge_distCBD.RData")
+
+write.csv(test_merge_distCBD, file = "backup_data_files/test_merge_distCBD.csv")
 
