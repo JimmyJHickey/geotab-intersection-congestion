@@ -10,12 +10,12 @@ train = read.csv("../data/train.csv")
 
 test = read.csv("../data/test.csv")
 
-train$IntersectionCity = paste( train$IntersectionId , "-", train$City)
+train$IntersectionCity = paste( train$IntersectionId, train$City)
 
-test$IntersectionCity = paste( test$IntersectionId , "-", test$City)
+test$IntersectionCity = paste( test$IntersectionId, test$City)
 
-write.csv(train, file = "../engineered_features/train-IDs.csv")
-write.csv(test, file = "../engineered_features/test-IDs.csv")
+write.csv(train %>% select(RowId, IntersectionCity), file = "train-IDs.csv", row.names=FALSE)
+write.csv(test %>% select(RowId, IntersectionCity), file = "test-IDs.csv", row.names=FALSE)
 
 write_oneway = function(
                     input_data,
