@@ -1,9 +1,5 @@
 
-library(randomForest)
-library(drake)
-library(dplyr)
-
-train_normalize_census <- readd(train_normalize_census)
+geotab_random_forest <- function(train_complete, test_complete) {
 
 # taking out variables I don't want RandomForest to use
 
@@ -12,23 +8,20 @@ train_normalize_census <- readd(train_normalize_census)
 # EntryStreetName and ExitStreetName and Path have too many categories
 # RowId and IntersectionId should not be there
 
-model_dat <- select(train_normalize_census, -ends_with("Raw"), -starts_with("TotalTime"), -starts_with("TimeFrom"), -starts_with("DistanceTo"), -ends_with("Name"), -Path, -RowId, -IntersectionId)
+model_dat = select(train_complete, -ends_with("Raw"), -starts_with("TotalTime"), -starts_with("TimeFrom"),
+                   -starts_with("DistanceTo"), -ends_with("Name"), -Path, -RowId, -IntersectionId, -IntersectionCity)
 
-set.seed(452)
-
-sub_idx <- sample(1:dim(train_normalize_census)[1], size = dim(train_normalize_census)[1] / 1000)
+sub_idx = sample(1:dim(train_complete)[1], size = dim(train_complete)[1] / 100)
 
 # I'm using TotalTimeStopped as the response variable for the Random Forest
-rf_total_time_50 <- randomForest(train_normalize_census$TotalTimeStopped_p50[sub_idx] ~ ., data = model_dat[sub_idx,], importance = TRUE)
+rf_total_time_50 = randomForest(train_complete$TotalTimeStopped_p50[sub_idx] ~ ., data = model_dat[sub_idx,], importance = TRUE)
 
-
-
-
-imps <- importance(rf_total_time_50)   
+imps = importance(rf_total_time_50)   
 
 # this plot is too messy--we have too many variables
-varImpPlot(rf_total_time_50) 
+# varImpPlot(rf_total_time_50) 
 
+return(rf_total_time_50 = rf_total_time_50, imps = imps)
 
+}
 
-save(imps, file = "imps.RData")
