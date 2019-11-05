@@ -21,7 +21,7 @@ imps = importance(rf_total_time_50)
 # this plot is too messy--we have too many variables
 # varImpPlot(rf_total_time_50) 
 
-return(rf_total_time_50 = rf_total_time_50, imps = imps)
+return(list(rf_total_time_50 = rf_total_time_50, imps = imps))
 
 }
 

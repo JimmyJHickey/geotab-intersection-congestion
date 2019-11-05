@@ -14,7 +14,9 @@ source("random_forest.R")
 
 modeling_plan <- drake_plan(
   
-  rf_results <- geotab_random_forest(train_complete, test_complete)
+  rf_results = geotab_random_forest(train_complete, test_complete),
+  rf_total_time_50 = rf_results$rf_total_time_50,
+  imps = rf_results$imps
   
 )
 
@@ -32,6 +34,7 @@ cache <- drake_cache()
 
 
 
+loadd(imps)
 save(imps, file = "imps.RData")
 
 
