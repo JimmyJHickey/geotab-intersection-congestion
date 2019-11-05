@@ -5,8 +5,8 @@ library(dplyr)
 
 # load dependencies
 
-train_complete <- readd(train_complete)
-test_complete <- readd(test_complete)
+load("backup_data_files/train_complete.RData")
+load("backup_data_files/test_complete.RData")
 
 source("random_forest.R")
 
