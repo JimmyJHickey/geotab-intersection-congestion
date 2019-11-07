@@ -19,11 +19,23 @@ load("backup_data_files/test_append_weather.RData")
 
 
 
-rename_reorder <- function(train_complete_pre, test_complete_pre) {
+last_modif <- function(train_complete_pre, test_complete_pre) {
   
+  # rename GeoID -> GeoId
   names(train_complete_pre)[names(train_complete_pre) == "GeoID"] <- "GeoId"
   names(test_complete_pre)[names(test_complete_pre) == "GeoID"] <- "GeoId"
   
+  # make variables categorical
+  train_complete_pre$GeoId <- as.factor(train_complete_pre$GeoId)
+  test_complete_pre$GeoId <- as.factor(test_complete_pre$GeoId)
+  
+  train_complete_pre$OnewayEntry <- as.factor(train_complete_pre$OnewayEntry)
+  test_complete_pre$OnewayEntry <- as.factor(test_complete_pre$OnewayEntry)
+  
+  train_complete_pre$OnewayExit <- as.factor(train_complete_pre$OnewayExit)
+  test_complete_pre$OnewayExit <- as.factor(test_complete_pre$OnewayExit) 
+  
+  # reorder IntersectionCity to be the third variable
   train_complete = select(train_complete_pre, RowId, GeoId, IntersectionCity, everything())
   test_complete = select(test_complete_pre, RowId, GeoId, IntersectionCity, everything())
   
@@ -73,7 +85,7 @@ complete_data_plan <- drake_plan(
   train_complete_pre = merge(train_merge_TurnAngle, train_append, by = "RowId"),
   test_complete_pre = merge(test_merge_TurnAngle, test_append, by = "RowId"),
   
-  res2 = rename_reorder(train_complete_pre, test_complete_pre),
+  res2 = last_modif(train_complete_pre, test_complete_pre),
   
   train_complete = res2$train_complete,
   test_complete = res2$test_complete
@@ -93,6 +105,8 @@ history <- drake_history(analyze = TRUE)
 cache <- drake_cache()
 
 
+loadd(train_complete)
+loadd(test_complete)
 
 save(train_complete, file = "backup_data_files/train_complete.RData")
 save(test_complete, file = "backup_data_files/test_complete.RData")
