@@ -1,34 +1,55 @@
 
-train <- train_merge_TurnAngle
+train <- train_complete
 
-test <- test_merge_TurnAngle
-  
-
-
+test <- test_complete
 
 
 
 
 # cbind the response variables
-responses = cbind(train_merge_TurnAngle$TotalTimeStopped_p20, train_merge_TurnAngle$TotalTimeStopped_p50, 
-                   train_merge_TurnAngle$TotalTimeStopped_p80, train_merge_TurnAngle$DistanceToFirstStop_p20, 
-                   train_merge_TurnAngle$DistanceToFirstStop_p50, train_merge_TurnAngle$DistanceToFirstStop_p80)
+responses <- cbind(train$TotalTimeStopped_p20, train$TotalTimeStopped_p50, 
+                   train$TotalTimeStopped_p80, train$DistanceToFirstStop_p20, 
+                   train$DistanceToFirstStop_p50, train$DistanceToFirstStop_p80)
+
+colnames(responses) <- c("TotalTimeStopped_p20", "TotalTimeStopped_p50", 
+                         "TotalTimeStopped_p80", "DistanceToFirstStop_p20", 
+                         "DistanceToFirstStop_p50", "DistanceToFirstStop_p80")
 
 
 
-# Simple baseline linear regression model
+# Simple baseline linear regression model (return?)
 
-base_lm = lm(responses ~ Latitude + Longitude + EntryHeading + ExitHeading
+base_lm <- lm(responses ~ Latitude + Longitude + EntryHeading + ExitHeading
               + Hour + Weekend + Month, data = train)
 
 
 
-# lm(cbind(Y1,Y2,Y3) ~ X1+X2+X3, data=somedata)
 
-# total_time = ['TotalTimeStopped_p20',
-#               'TotalTimeStopped_p50', 
-#               'TotalTimeStopped_p80']
+
+indep_vars = select(train_complete, -RowId, -IntersectionId, -starts_with("TotalTime"), -starts_with("TimeFrom"),
+                   -starts_with("DistanceTo"), -Path, -ends_with("Raw"))
+
+# Preparing for glmnet
+
+train_mat <- sparse.model.matrix(~ ., indep_vars)[,-1]
+
+
+
+# elastic net regularization
+
+en_cv <- cv.glmnet(train_mat, responses, alpha = .95, family = "mgaussian", standardize.response = FALSE)
+
+# $lambda.min
+# [1] 0.0007917862
 # 
-# target_stopped = ['DistanceToFirstStop_p20',
-#                   'DistanceToFirstStop_p50',
-#                   'DistanceToFirstStop_p80']
+# $lambda.1se
+# [1] 0.05717337
+
+en_res <- glmnet(train_mat, responses, alpha = .95, lambda = en_cv$lambda.1se, 
+                 family = "mgaussian", standardize.response = FALSE)
+
+
+
+save(en_cv, file = "modeling_files/en_cv.RData")
+save(en_res, file = "modeling_files/en_cv.RData")
+

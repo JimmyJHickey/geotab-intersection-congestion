@@ -1,9 +1,10 @@
+# load dependencies
 
 library(randomForest)
 library(drake)
 library(dplyr)
-
-# load dependencies
+library(Matrix)
+library(glmnet)
 
 load("backup_data_files/train_complete.RData")
 load("backup_data_files/test_complete.RData")
