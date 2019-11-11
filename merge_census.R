@@ -2,8 +2,8 @@
 ########## move to script.R file later ##########
 
 # install.packages("devtools")
-library(devtools)
-install_github("ropensci/drake")
+# library(devtools)
+# install_github("ropensci/drake")
 library(drake)
 
 library(sf)

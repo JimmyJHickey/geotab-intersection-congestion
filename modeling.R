@@ -17,14 +17,18 @@ load("backup_data_files/test_complete.RData")
 submission <- read.csv("bigquery-geotab-intersection-congestion-data/sample_submission.csv")
 
 source("random_forest.R")
+source("linear_regression.R")
 
 
 
 modeling_plan <- drake_plan(
   
+  lin_reg_results = geotab_linear_regression(train_complete, test_complete, submission),
+  
   rf_results = geotab_random_forest(train_complete, test_complete),
   rf_total_time_50 = rf_results$rf_total_time_50,
   imps = rf_results$imps
+  
   
 )
 
