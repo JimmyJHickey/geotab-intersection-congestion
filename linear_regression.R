@@ -18,6 +18,12 @@ geotab_linear_regression <- function(train, test, submission) {
                   Hour + Weekend + Month + City + TotalPopulationDensity + Humidity + 
                   Temperature + DistCBD + TurnAngle + OnewayEntry + OnewayExit, data = train)
   
+  # "Latitude", "Longitude", "EntryHeading", "ExitHeading", 
+  #   "Hour", "Weekend", "Month", "City", "TotalPopulationDensity", "Humidity", 
+  #   "Temperature", "DistCBD", "TurnAngle", "OnewayEntry", "OnewayExit"
+  
+  
+  
   test_subset_lm <- select(test, Latitude, Longitude, EntryHeading, ExitHeading, 
                            Hour, Weekend, Month, City, TotalPopulationDensity, Humidity, 
                            Temperature, DistCBD, TurnAngle, OnewayEntry, OnewayExit)
@@ -57,7 +63,7 @@ geotab_linear_regression <- function(train, test, submission) {
   
   
   
-  return(list(base_lm = base_lm, linear_regression_submission = submission_linear_regression, 
+  return(list(base_lm = base_lm, submission_linear_regression = submission_linear_regression, 
               train_mat = train_mat, en_cv = en_cv, en_res = en_res))
   
 }

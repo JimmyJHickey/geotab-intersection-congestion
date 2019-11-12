@@ -24,9 +24,9 @@ source("linear_regression.R")
 modeling_plan <- drake_plan(
   
   lin_reg_results = geotab_linear_regression(train_complete, test_complete, submission),
+  submission_linear_regression = lin_reg_results$submission_linear_regression,
   
   rf_results = geotab_random_forest(train_complete, test_complete),
-  rf_total_time_50 = rf_results$rf_total_time_50,
   imps = rf_results$imps
   
   
@@ -48,6 +48,9 @@ cache <- drake_cache()
 
 loadd(imps)
 save(imps, file = "imps.RData")
+
+loadd(submission_linear_regression)
+write.csv(submission, file = "submission_files/submission_linear_regression.csv", row.names = FALSE)
 
 
 

@@ -29,6 +29,9 @@ last_modif <- function(train_complete_pre, test_complete_pre) {
   train_complete_pre$GeoId <- as.factor(train_complete_pre$GeoId)
   test_complete_pre$GeoId <- as.factor(test_complete_pre$GeoId)
   
+  train_complete_pre$Weekend <- as.factor(train_complete_pre$Weekend)
+  test_complete_pre$Weekend <- as.factor(test_complete_pre$Weekend)
+  
   train_complete_pre$OnewayEntry <- as.factor(train_complete_pre$OnewayEntry)
   test_complete_pre$OnewayEntry <- as.factor(test_complete_pre$OnewayEntry)
   
