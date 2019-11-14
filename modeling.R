@@ -18,13 +18,18 @@ submission <- read.csv("bigquery-geotab-intersection-congestion-data/sample_subm
 
 source("random_forest.R")
 source("linear_regression.R")
+source("elastic_net.R")
 
 
 
 modeling_plan <- drake_plan(
   
-  lin_reg_results = geotab_linear_regression(train_complete, test_complete, submission),
+  lin_reg_results = geotab_elastic_net(train_complete, test_complete, submission),
   submission_linear_regression = lin_reg_results$submission_linear_regression,
+  
+  elastic_net_results = geotab_elastic_net(train_complete, test_complete, submission),
+  train_en_select = elastic_net_results$train_en_select,
+  test_en_select = elastic_net_results$test_en_select,
   
   rf_results = geotab_random_forest(train_complete, test_complete),
   imps = rf_results$imps
@@ -51,6 +56,12 @@ save(imps, file = "imps.RData")
 
 loadd(submission_linear_regression)
 write.csv(submission, file = "submission_files/submission_linear_regression.csv", row.names = FALSE)
+
+loadd(train_en_select)
+save(train_en_select, file = "modeling_files/train_en_select.RData")
+
+loadd(test_en_select)
+save(test_en_select, file = "modeling_files/test_en_select.RData")
 
 
 
