@@ -42,6 +42,9 @@ last_modif <- function(train_complete_pre, test_complete_pre) {
   train_complete = select(train_complete_pre, RowId, GeoId, IntersectionCity, everything())
   test_complete = select(test_complete_pre, RowId, GeoId, IntersectionCity, everything())
   
+  # relevel factors so that the base level is present in both train and test
+  train_complete$IntersectionCity <- relevel(train_complete$IntersectionCity, "0 Boston")
+  
   return(list(train_complete = train_complete, test_complete = test_complete))
   
 }
