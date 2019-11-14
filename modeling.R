@@ -66,3 +66,42 @@ save(test_en_select, file = "modeling_files/test_en_select.RData")
 
 
 
+# ad hoc code to circumvent Error: vector memory exhausted (limit reached?)
+
+loadd(lin_reg_results)
+
+vars_test = select(test_complete, -RowId, -IntersectionId, -Path, -ends_with("Raw"))
+
+
+
+en_res <- lin_reg_results$en_res
+
+selected <- coef(en_res)
+
+sel <- as.numeric(selected[[2]])
+
+sel_idx <- which(sel[-1] != 0)
+
+
+
+train_mat <- lin_reg_results$train_mat
+
+test_mat <- sparse.model.matrix(~ ., vars_test)[,-1]
+
+
+
+# whoops--I forgot to make sure train_mat and test_mat had the same columns. Oh well-- train_en_select should be good tho
+
+train_en_select_TotalTimeStopped_p50 <- train_mat[,sel_idx]
+test_en_select_TotalTimeStopped_p50 <- test_mat[,sel_idx]
+
+
+
+save(test_mat, file = "modeling_files/test_mat.RData")
+save(train_en_select_TotalTimeStopped_p50, file = "modeling_files/train_en_select_TotalTimeStopped_p50.RData")
+save(test_en_select_TotalTimeStopped_p50, file = "modeling_files/test_en_select_TotalTimeStopped_p50.RData")
+
+# head(train_en_select_TotalTimeStopped_p50[,!grepl("GeoId|IntersectionCity|EntryStreetName|ExitStreetName", colnames(train_en_select_TotalTimeStopped_p50))])
+
+
+
