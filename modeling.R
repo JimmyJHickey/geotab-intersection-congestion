@@ -66,14 +66,10 @@ save(imps, file = "imps.RData")
 
 
 
-
-
 # helpful code to deal with sparse matrix
 
-# head(train_en_select_TotalTimeStopped_p50[,!grepl("GeoId|IntersectionCity|EntryStreetName|ExitStreetName", colnames(train_en_select_TotalTimeStopped_p50))])
+# head(train_en_select[,!grepl("GeoIdTruncWithOther|IntersectionCityWithOther|EntryStreetNameWithOther|ExitStreetNameWithOther", colnames(train_en_select))])
 
-# head(train_en_select[[1]][,!grepl("GeoId|IntersectionCity|EntryStreetName|ExitStreetName", colnames(train_en_select[[1]]))])
-
-# lm(train_complete$TotalTimeStopped_p50 ~ ., data = data.frame(as.matrix(test_mat)))
+# lm(train_complete$TotalTimeStopped_p50 ~ ., data = data.frame(as.matrix(train_en_select)))
 
 
