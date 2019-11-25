@@ -3,6 +3,7 @@
 # If it's your first time using drake, use below code
 # library(devtools)
 # install_github("ropensci/drake")
+
 library(drake)
 library(dplyr)
 library(Matrix)
@@ -19,6 +20,7 @@ submission <- read.csv("bigquery-geotab-intersection-congestion-data/sample_subm
 source("random_forest.R")
 source("linear_regression.R")
 source("elastic_net.R")
+source("logistic_hurdle.R")
 
 
 
