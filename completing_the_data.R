@@ -1,6 +1,7 @@
 
 library(dplyr)
 library(drake)
+library(forcats)
 
 # this script file will run thru a pipeline, doing the merging of extra data and features to the original train and test
 
@@ -15,7 +16,29 @@ load("backup_data_files/test_append_weather.RData")
 
 
 
-# function to fix up train_complete and test_complete
+# functions to fix up train_complete and test_complete
+
+
+
+# # helper function to group rare categories to "Other" to reduce total number of levels
+# # returns new variable with regrouped categories
+# 
+# group_rare_cats <- function(fct_var, desired_min_cat) {
+#   
+#   # Group rare fct_var levels into "Other", such that there is at least desired_min_cat values
+#   # in each category
+#   num_cats <- length(unique(fct_var))
+#   min_cat <- 0 # initial value less than desired_min_cat
+#   
+#   while(min_cat < desired_min_cat & num_cats >= 0) {
+#     num_cats <- num_cats - 1
+#     tab <- table(fct_lump(fct_var, n = num_cats))
+#     min_cat <- min(tab)
+#   }
+#   
+#   return(fct_lump(fct_var, n = num_cats))
+#   
+# }
 
 
 
@@ -25,9 +48,16 @@ last_modif <- function(train_complete_pre, test_complete_pre) {
   names(train_complete_pre)[names(train_complete_pre) == "GeoID"] <- "GeoId"
   names(test_complete_pre)[names(test_complete_pre) == "GeoID"] <- "GeoId"
   
+  # truncate last three numbers from GeoId, to refer to broader category, census tracts
+  train_complete_pre$GeoIdTrunc <- substr(train_complete_pre$GeoId, 1, 9)
+  test_complete_pre$GeoIdTrunc <- substr(test_complete_pre$GeoId, 1, 9)
+  
   # make variables categorical
   train_complete_pre$GeoId <- as.factor(train_complete_pre$GeoId)
   test_complete_pre$GeoId <- as.factor(test_complete_pre$GeoId)
+  
+  train_complete_pre$GeoIdTrunc <- as.factor(train_complete_pre$GeoIdTrunc)
+  test_complete_pre$GeoIdTrunc <- as.factor(test_complete_pre$GeoIdTrunc)
   
   train_complete_pre$Weekend <- as.factor(train_complete_pre$Weekend)
   test_complete_pre$Weekend <- as.factor(test_complete_pre$Weekend)
@@ -44,6 +74,27 @@ last_modif <- function(train_complete_pre, test_complete_pre) {
   
   # relevel factors so that the base level is present in both train and test
   train_complete$IntersectionCity <- relevel(train_complete$IntersectionCity, "0 Boston")
+  
+  # Group rare categories to "Other" to reduce total number of levels
+  # I modulate n depending on how many unique levels the variable has
+  # I just repeat variables with test because the feature selection will automatically align
+  # variables between train and test
+  
+  train_complete$GeoIdTruncWithOther <- fct_lump(train_complete$GeoIdTrunc, n = 200)
+  test_complete$GeoIdTruncWithOther <- test_complete$GeoIdTrunc
+  
+  train_complete$IntersectionCityWithOther <- fct_lump(train_complete$IntersectionCity, n = 500)
+  test_complete$IntersectionCityWithOther <- test_complete$IntersectionCity
+  
+  train_complete$EntryStreetNameWithOther <- fct_lump(train_complete$EntryStreetName, n = 300)
+  test_complete$EntryStreetNameWithOther <- test_complete$EntryStreetName
+  
+  train_complete$ExitStreetNameWithOther <- fct_lump(train_complete$ExitStreetName, n = 300)
+  test_complete$ExitStreetNameWithOther <- test_complete$ExitStreetName
+  
+  # Concatenate EntryHeading and ExitHeading
+  train_complete$EntryExitHeading <- paste(train_complete$EntryHeading, train_complete$ExitHeading)
+  test_complete$EntryExitHeading <- paste(test_complete$EntryHeading, test_complete$ExitHeading)
   
   return(list(train_complete = train_complete, test_complete = test_complete))
   

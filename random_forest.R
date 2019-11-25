@@ -9,7 +9,9 @@ geotab_random_forest <- function(train, test) {
 # RowId and IntersectionId should not be there
 
 model_dat = select(train, -GeoId, -ends_with("Raw"), -starts_with("TotalTime"), -starts_with("TimeFrom"),
-                   -starts_with("DistanceTo"), -ends_with("StreetName"), -Path, -RowId, -IntersectionId, -IntersectionCity)
+                   -starts_with("DistanceTo"), -ends_with("StreetName"), -Path, -RowId, -IntersectionId, -IntersectionCity,
+                   -GeoId, -GeoIdTrunc, -GeoIdTruncWithOther, -IntersectionCity, -IntersectionCityWithOther, -EntryStreetName,
+                   -EntryStreetNameWithOther, -ExitStreetName, -ExitStreetNameWithOther, -EntryExitHeading)
 
 sub_idx = sample(1:dim(train)[1], size = dim(train)[1] / 100)
 

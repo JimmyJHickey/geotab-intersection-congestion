@@ -26,12 +26,13 @@ source("logistic_hurdle.R")
 
 modeling_plan <- drake_plan(
   
-  lin_reg_results = geotab_elastic_net(train_complete, test_complete, submission),
+  lin_reg_results = geotab_linear_regression(train_complete, test_complete, submission),
   submission_linear_regression = lin_reg_results$submission_linear_regression,
   
   elastic_net_results = geotab_elastic_net(train_complete, test_complete, submission),
-  train_en_select = elastic_net_results$train_en_select,
-  test_en_select = elastic_net_results$test_en_select,
+  ft_select_results = en_feature_selection(elastic_net_results),
+  train_en_select = ft_select_results$train_en_select,
+  test_en_select = ft_select_results$test_en_select,
   
   rf_results = geotab_random_forest(train_complete, test_complete),
   imps = rf_results$imps
@@ -56,54 +57,21 @@ cache <- drake_cache()
 loadd(imps)
 save(imps, file = "imps.RData")
 
-loadd(submission_linear_regression)
-write.csv(submission, file = "submission_files/submission_linear_regression.csv", row.names = FALSE)
+# loadd(submission_linear_regression)
+# write.csv(submission, file = "submission_files/submission_linear_regression.csv", row.names = FALSE)
 
-loadd(train_en_select)
-save(train_en_select, file = "modeling_files/train_en_select.RData")
-
-loadd(test_en_select)
-save(test_en_select, file = "modeling_files/test_en_select.RData")
-
-
-
-
-# ad hoc code to circumvent Error: vector memory exhausted (limit reached?)
-
-loadd(lin_reg_results)
-
-vars_test = select(test_complete, -RowId, -IntersectionId, -Path, -ends_with("Raw"))
+# loadd(train_en_select)
+# save(train_en_select, file = "modeling_files/train_en_select.RData")
+# 
+# loadd(test_en_select)
+# save(test_en_select, file = "modeling_files/test_en_select.RData")
 
 
 
-en_res <- lin_reg_results$en_res
+# helpful code to deal with sparse matrix
 
-selected <- coef(en_res)
+# head(train_en_select[,!grepl("GeoIdTruncWithOther|IntersectionCityWithOther|EntryStreetNameWithOther|ExitStreetNameWithOther", colnames(train_en_select))])
 
-sel <- as.numeric(selected[[2]])
-
-sel_idx <- which(sel[-1] != 0)
-
-
-
-train_mat <- lin_reg_results$train_mat
-
-test_mat <- sparse.model.matrix(~ ., vars_test)[,-1]
-
-
-
-# whoops--I forgot to make sure train_mat and test_mat had the same columns. Oh well-- train_en_select should be good tho
-
-train_en_select_TotalTimeStopped_p50 <- train_mat[,sel_idx]
-test_en_select_TotalTimeStopped_p50 <- test_mat[,sel_idx]
-
-
-
-save(test_mat, file = "modeling_files/test_mat.RData")
-save(train_en_select_TotalTimeStopped_p50, file = "modeling_files/train_en_select_TotalTimeStopped_p50.RData")
-save(test_en_select_TotalTimeStopped_p50, file = "modeling_files/test_en_select_TotalTimeStopped_p50.RData")
-
-# head(train_en_select_TotalTimeStopped_p50[,!grepl("GeoId|IntersectionCity|EntryStreetName|ExitStreetName", colnames(train_en_select_TotalTimeStopped_p50))])
-
+# lm(train_complete$TotalTimeStopped_p50 ~ ., data = data.frame(as.matrix(train_en_select)))
 
 
