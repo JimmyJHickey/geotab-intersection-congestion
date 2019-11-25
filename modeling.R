@@ -3,6 +3,7 @@
 # If it's your first time using drake, use below code
 # library(devtools)
 # install_github("ropensci/drake")
+
 library(drake)
 library(dplyr)
 library(Matrix)
@@ -19,6 +20,7 @@ submission <- read.csv("bigquery-geotab-intersection-congestion-data/sample_subm
 source("random_forest.R")
 source("linear_regression.R")
 source("elastic_net.R")
+source("logistic_hurdle.R")
 
 
 
@@ -28,6 +30,7 @@ modeling_plan <- drake_plan(
   submission_linear_regression = lin_reg_results$submission_linear_regression,
   
   elastic_net_results = geotab_elastic_net(train_complete, test_complete, submission),
+  submission_elastic_net = elastic_net_results$submission_elastic_net,
   ft_select_results = en_feature_selection(elastic_net_results),
   train_en_select = ft_select_results$train_en_select,
   test_en_select = ft_select_results$test_en_select,
@@ -63,6 +66,11 @@ save(imps, file = "imps.RData")
 # 
 # loadd(test_en_select)
 # save(test_en_select, file = "modeling_files/test_en_select.RData")
+
+# loadd(submission_elastic_net)
+write.csv(submission_elastic_net, file = "submission_files/submission_elastic_net.csv", row.names = FALSE)
+
+
 
 
 

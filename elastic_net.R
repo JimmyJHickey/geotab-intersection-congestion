@@ -39,8 +39,14 @@ geotab_elastic_net <- function(train, test, submission) {
   en_res <- glmnet(train_mat, responses, alpha = .95, lambda = en_cv$lambda.1se, 
                    family = "mgaussian", standardize.response = FALSE)
   
-  return(list(train_mat = train_mat, test_mat = test_mat, en_cv = en_cv, en_res = en_res))  
+  glmnet_pred <- predict(en_res, type = "response", newx = test_mat)
   
+  glmnet_pred_reshape <- glmnet_pred[,,1] # get rid of extraneous dimension
+  
+  submission_elastic_net$Target <- as.vector(t(glmnet_pred_reshape))
+  
+  return(list(train_mat = train_mat, test_mat = test_mat, en_cv = en_cv, en_res = en_res, 
+              submission_elastic_net = submission_elastic_net))  
   
 }
 
