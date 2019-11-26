@@ -31,7 +31,7 @@ geotab_cleanup = function(submission,
   # round to nearest integer
   if (rounding)
   {
-    sumbission$Target = round(submission$Target)
+    submission$Target = round(submission$Target)
   }
   
   
