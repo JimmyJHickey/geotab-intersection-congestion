@@ -26,7 +26,7 @@ geotab_cleanup = function(submission,
                           rounding = FALSE)
 {
   # make sure we have no negatives
-  submission$Target = max(submission$Target, 0)
+  submission$Target = sapply(submission$Target, function(x) max(x, 0))
   
   # round to nearest integer
   if (rounding)
