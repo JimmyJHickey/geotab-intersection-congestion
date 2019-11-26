@@ -1,4 +1,26 @@
-# clean up responses for submission file
+###
+# Jimmy Hickey
+# 2019-11-26
+# Clean up responses for submission file by changing negatives to 0.
+# It also has the option to round
+# 
+# ================
+# inputs
+# ================
+# sumbission: 
+#   Predictions in submission format. It should have an ID column and a Target column.
+#
+# rounding:
+#   Boolean that will round the responses. Default set to FALSE.
+#
+#
+# ================
+# outputs
+# ================
+# submission:
+#   Same submission format with responses updated.
+####
+
 
 geotab_cleanup = function(submission,
                           rounding = FALSE)
@@ -7,7 +29,6 @@ geotab_cleanup = function(submission,
   submission$Target = max(submission$Target, 0)
   
   # round to nearest integer
-  
   if (rounding)
   {
     sumbission$Target = round(submission$Target)
