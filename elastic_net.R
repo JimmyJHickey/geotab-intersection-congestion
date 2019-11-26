@@ -13,9 +13,11 @@ geotab_elastic_net <- function(train, test, submission) {
   
   indep_vars_train = select(train, -RowId, -IntersectionId, -starts_with("TotalTime"), -starts_with("TimeFrom"),
                             -starts_with("DistanceTo"), -Path, -ends_with("Raw"), -GeoId, -GeoIdTrunc, -IntersectionCity, 
-                            -EntryStreetName, -ExitStreetName)
+                            -EntryStreetName, -ExitStreetName, 
+                            -GeoIdTruncWithOther, -IntersectionCityWithOther, -EntryStreetNameWithOther, -ExitStreetNameWithOther)
   vars_test = select(test, -RowId, -IntersectionId, -Path, -ends_with("Raw"), -GeoId, -GeoIdTrunc, -IntersectionCity, 
-                     -EntryStreetName, -ExitStreetName)
+                     -EntryStreetName, -ExitStreetName, -GeoIdTruncWithOther, -IntersectionCityWithOther, -EntryStreetNameWithOther, 
+                     -ExitStreetNameWithOther)
   
   # Preparing for glmnet
   train_mat <- sparse.model.matrix(~ ., indep_vars_train)[,-1]
