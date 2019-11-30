@@ -12,11 +12,21 @@ library(Matrix)
 library(glmnet)
 library(randomForest)
 
+## For setting up XGBoost
+# install.packages("drat", repos="https://cran.rstudio.com")
+# drat:::addRepo("dmlc")
+# install.packages("xgboost", repos="http://dmlc.ml/drat/", type = "source")
+
+library(xgboost)
+
+
+
 load("backup_data_files/train_complete.RData")
 load("backup_data_files/test_complete.RData")
 
 submission <- read.csv("bigquery-geotab-intersection-congestion-data/sample_submission.csv")
 
+source("cleanup.R")
 source("random_forest.R")
 source("linear_regression.R")
 source("elastic_net.R")
@@ -26,18 +36,22 @@ source("logistic_hurdle.R")
 
 modeling_plan <- drake_plan(
   
+  responses = select(train_complete, starts_with("TotalTime"), starts_with("TimeFrom"),
+                     starts_with("DistanceTo")),
+  
   lin_reg_results = geotab_linear_regression(train_complete, test_complete, submission),
-  submission_linear_regression = lin_reg_results$submission_linear_regression,
+  submission_linear_regression = geotab_cleanup(lin_reg_results$submission_linear_regression, rounding = TRUE),
   
   elastic_net_results = geotab_elastic_net(train_complete, test_complete, submission),
-  submission_elastic_net = elastic_net_results$submission_elastic_net,
+  submission_elastic_net = geotab_cleanup(elastic_net_results$submission_elastic_net, rounding = TRUE),
   ft_select_results = en_feature_selection(elastic_net_results),
   train_en_select = ft_select_results$train_en_select,
   test_en_select = ft_select_results$test_en_select,
   
   rf_results = geotab_random_forest(train_complete, test_complete),
-  imps = rf_results$imps
+  imps = rf_results$imps,
   
+  # xgboost_results = geotab_xgboost(train_en_select, responses, test_en_select, submission)
   
 )
 
@@ -59,15 +73,15 @@ loadd(imps)
 save(imps, file = "imps.RData")
 
 # loadd(submission_linear_regression)
-# write.csv(submission, file = "submission_files/submission_linear_regression.csv", row.names = FALSE)
+# write.csv(submission_linear_regression, file = "submission_files/submission_linear_regression.csv", row.names = FALSE)
 
-# loadd(train_en_select)
-# save(train_en_select, file = "modeling_files/train_en_select.RData")
-# 
-# loadd(test_en_select)
-# save(test_en_select, file = "modeling_files/test_en_select.RData")
+loadd(train_en_select)
+save(train_en_select, file = "modeling_files/train_en_select.RData")
 
-# loadd(submission_elastic_net)
+loadd(test_en_select)
+save(test_en_select, file = "modeling_files/test_en_select.RData")
+
+loadd(submission_elastic_net)
 write.csv(submission_elastic_net, file = "submission_files/submission_elastic_net.csv", row.names = FALSE)
 
 

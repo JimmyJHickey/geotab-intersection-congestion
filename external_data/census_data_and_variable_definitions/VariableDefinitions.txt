@@ -35,12 +35,12 @@ Tables:
    Source code: B01003
    NHGIS code:  AHY1
  
-2. Sex of Workers by Place of Work--Place Level
+2. Sex of Workers by Place of Work--Place Level 
    Universe:    Workers 16 years and over - Estimates..Total.1
    Source code: B08008
    NHGIS code:  AHZJ
  
-3. Aggregate Travel Time to Work (in Minutes) of Workers by Means of Transportation to Work
+3. Aggregate Travel Time to Work (in Minutes) of Workers by Means of Transportation to Work **TOO MANY NAs**
    Universe:    Workers 16 years and over who did not work at home
    Source code: B08136
    NHGIS code:  AHZQ
@@ -60,7 +60,7 @@ Tables:
    Source code: B08303
    NHGIS code:  AHZT
  
-7. Median Household Income in the Past 12 Months (in 2017 Inflation-Adjusted Dollars)
+7. Median Household Income in the Past 12 Months (in 2017 Inflation-Adjusted Dollars) **TOO MANY NAs**
    Universe:    Households
    Source code: B19013
    NHGIS code:  AH1P

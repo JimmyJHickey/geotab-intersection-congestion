@@ -11,12 +11,12 @@ geotab_elastic_net <- function(train, test, submission) {
                            "TotalTimeStopped_p80", "DistanceToFirstStop_p20", 
                            "DistanceToFirstStop_p50", "DistanceToFirstStop_p80")
   
+  # -GeoId, -IntersectionCity, -EntryStreetName, -ExitStreetName,
   indep_vars_train = select(train, -RowId, -IntersectionId, -starts_with("TotalTime"), -starts_with("TimeFrom"),
-                            -starts_with("DistanceTo"), -Path, -ends_with("Raw"), -GeoId, -GeoIdTrunc, -IntersectionCity, 
-                            -EntryStreetName, -ExitStreetName, 
+                            -starts_with("DistanceTo"), -Path, -ends_with("Raw"), -GeoIdTrunc, 
                             -GeoIdTruncWithOther, -IntersectionCityWithOther, -EntryStreetNameWithOther, -ExitStreetNameWithOther)
-  vars_test = select(test, -RowId, -IntersectionId, -Path, -ends_with("Raw"), -GeoId, -GeoIdTrunc, -IntersectionCity, 
-                     -EntryStreetName, -ExitStreetName, -GeoIdTruncWithOther, -IntersectionCityWithOther, -EntryStreetNameWithOther, 
+  vars_test = select(test, -RowId, -IntersectionId, -Path, -ends_with("Raw"), -GeoIdTrunc,
+                     -GeoIdTruncWithOther, -IntersectionCityWithOther, -EntryStreetNameWithOther, 
                      -ExitStreetNameWithOther)
   
   # Preparing for glmnet
