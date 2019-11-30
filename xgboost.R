@@ -8,9 +8,13 @@ geotab_xgboost <- function(train, responses, test, submission_xgboost) {
   
   for (i in 1:6) {
     
-    bst <- xgboost(data = train, label = responses[[ resp_idx[i] ]],
-                   eta = 1, # max.depth = 2, nthread = 2, # comment out this line to use default parameters
-                   nrounds = 2, objective = "reg:linear")
+    param <- list(lambda = 1, nthread = 4, booster = "gbtree", 
+                  eval_metric = "rmse", objective = "reg:squarederror",
+                  min_child_weight = 20, eta = 0.05, colsample_bytree = 0.6,
+                  max.depth = 20, subsample = 0.8)
+    
+    bst <- xgboost(param, data = train, label = responses[[ resp_idx[i] ]], 
+                   nrounds = 200)
     
     bst_list[[i]] <- bst
     
