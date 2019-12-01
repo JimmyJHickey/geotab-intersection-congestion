@@ -31,6 +31,7 @@ source("random_forest.R")
 source("linear_regression.R")
 source("elastic_net.R")
 source("logistic_hurdle.R")
+source("xgboost.R")
 
 
 
@@ -51,7 +52,8 @@ modeling_plan <- drake_plan(
   rf_results = geotab_random_forest(train_complete, test_complete),
   imps = rf_results$imps,
   
-  # xgboost_results = geotab_xgboost(train_en_select, responses, test_en_select, submission)
+  xgboost_results = geotab_xgboost(elastic_net_results$train_mat, responses, elastic_net_results$test_mat, submission),
+  submission_xgboost = geotab_cleanup(xgboost_results$submission_xgboost)
   
 )
 
@@ -69,21 +71,23 @@ cache <- drake_cache()
 
 
 
-loadd(imps)
-save(imps, file = "imps.RData")
+# loadd(imps)
+# save(imps, file = "imps.RData")
 
 # loadd(submission_linear_regression)
 # write.csv(submission_linear_regression, file = "submission_files/submission_linear_regression.csv", row.names = FALSE)
 
-loadd(train_en_select)
-save(train_en_select, file = "modeling_files/train_en_select.RData")
+# loadd(train_en_select)
+# save(train_en_select, file = "modeling_files/train_en_select.RData")
 
-loadd(test_en_select)
-save(test_en_select, file = "modeling_files/test_en_select.RData")
+# loadd(test_en_select)
+# save(test_en_select, file = "modeling_files/test_en_select.RData")
 
-loadd(submission_elastic_net)
-write.csv(submission_elastic_net, file = "submission_files/submission_elastic_net.csv", row.names = FALSE)
+# loadd(submission_elastic_net)
+# write.csv(submission_elastic_net, file = "submission_files/submission_elastic_net.csv", row.names = FALSE)
 
+loadd(submission_xgboost)
+write.csv(submission_xgboost, file = "submission_files/submission_xgboost.csv", row.names = FALSE)
 
 
 
