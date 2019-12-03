@@ -20,28 +20,6 @@ load("backup_data_files/test_append_weather.RData")
 
 
 
-# # helper function to group rare categories to "Other" to reduce total number of levels
-# # returns new variable with regrouped categories
-# 
-# group_rare_cats <- function(fct_var, desired_min_cat) {
-#   
-#   # Group rare fct_var levels into "Other", such that there is at least desired_min_cat values
-#   # in each category
-#   num_cats <- length(unique(fct_var))
-#   min_cat <- 0 # initial value less than desired_min_cat
-#   
-#   while(min_cat < desired_min_cat & num_cats >= 0) {
-#     num_cats <- num_cats - 1
-#     tab <- table(fct_lump(fct_var, n = num_cats))
-#     min_cat <- min(tab)
-#   }
-#   
-#   return(fct_lump(fct_var, n = num_cats))
-#   
-# }
-
-
-
 last_modif <- function(train_complete_pre, test_complete_pre) {
   
   # rename GeoID -> GeoId
