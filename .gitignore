@@ -11,5 +11,7 @@ backup_data_files/test_normalize_census.csv
 scratch.R
 .DS_Store
 *data/
-
+*submission_files
+*modeling_files
+catboost.R
 
